@@ -9,8 +9,8 @@ services:
       start_period: 30s
     depends_on:
       perimeter:
-        #condition: service_healthy
-        condition: service_started
+        condition: service_healthy
+        #condition: service_started
     cap_add:
       - NET_ADMIN
     post_start:
@@ -34,20 +34,24 @@ services:
       - command: ip route add default via 172.28.0.1
     depends_on:
       perimeter:
-        condition: service_started
-        #condition: service_healthy
+        #condition: service_started
+        condition: service_healthy
     networks:
       dmz:
         ipv4_address: 172.28.0.2
 
 
   perimeter:
-    build: framework/openwrt
+    build: openwrt/rootfs:x86_64-openwrt-23.05
     hostname: perimeter
     restart: unless-stopped
+    entrypoint: "/sbin/init"
+    ports:
+      - 8080:80
+      - 4433:443
+      - 5000:5000 #dvwa
     volumes:
       - ./config/router/perimeter/init.sh:/etc/uci-defaults/init.sh
-      #- ./config/router/perimeter/ospfd.conf:/etc/quagga/ospfd.conf
     healthcheck:
       test: test -e /.started && (ping -c 4 8.8.8.8 > /dev/null 2>&1 || exit 1)
       interval: 20s
@@ -57,7 +61,7 @@ services:
     privileged: true
     networks:
       internet:
-        ipv4_address: 172.30.0.2
+        #ipv4_address: 172.30.0.2
       client:
         ipv4_address: 172.29.0.1
       dmz:
@@ -69,7 +73,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.30.0.0/24
+        - subnet: 172.30.0.0/30
           gateway: 172.30.0.1
 
   client:

@@ -46,9 +46,8 @@ services:
     hostname: perimeter
     restart: unless-stopped
     entrypoint: "/sbin/init"
-    ports:
+    ports:  # Remember to use 127.0.0.1, NOT localhost
       - 8080:80
-      - 4433:443
       - 5000:5000 #dvwa
     volumes:
       - ./config/router/perimeter/init.sh:/etc/uci-defaults/init.sh

@@ -42,7 +42,7 @@ services:
 
 
   perimeter:
-    build: openwrt/rootfs:x86_64-openwrt-23.05
+    image: openwrt/rootfs:x86_64-openwrt-23.05
     hostname: perimeter
     restart: unless-stopped
     entrypoint: "/sbin/init"
@@ -60,7 +60,7 @@ services:
     privileged: true
     networks:
       internet:
-        #ipv4_address: 172.30.0.2
+        ipv4_address: 172.30.0.2
       client:
         ipv4_address: 172.29.0.1
       dmz:

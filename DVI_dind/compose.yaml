@@ -1,23 +1,63 @@
 services:
-  alpineA:
+  # alpineClient:
+  #   image: alpine
+  #   healthcheck:
+  #     test: ping -c 5 172.29.0.1 > /dev/null 2>&1 || exit 1
+  #     interval: 20s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 30s
+  #   depends_on:
+  #     perimeter:
+  #       condition: service_healthy
+  #   cap_add:
+  #     - NET_ADMIN
+  #   post_start:
+  #      - command: /bin/sh -c "ip route del default; ip route add default via 172.29.0.1"
+  #   entrypoint: tail -f /dev/null
+  #   networks:
+  #     n10_client:
+  #       ipv4_address: 172.29.0.2
+
+  alpineEnterprise:
     image: alpine
     healthcheck:
-      test: ping -c 5 172.29.0.1 > /dev/null 2>&1 || exit 1
+      test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
       interval: 20s
       timeout: 10s
       retries: 5
       start_period: 30s
     depends_on:
-      perimeter:
+      enterprise:
         condition: service_healthy
     cap_add:
       - NET_ADMIN
     post_start:
-       - command: ip route del default; ip route add default via 172.29.0.1
+       - command: /bin/sh -c "ip route del default; ip route add default via 172.60.0.1"
     entrypoint: tail -f /dev/null
     networks:
-      n10_client:
-        ipv4_address: 172.29.0.2
+      n40_enterprise:
+        ipv4_address: 172.60.0.2
+
+  alpineIndustrial:
+    image: alpine
+    healthcheck:
+      test: ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    post_start:
+       - command: /bin/sh -c "ip route del default; ip route add default via 172.90.0.1"
+    entrypoint: tail -f /dev/null
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.2
   
   dvwa:
     image: vulnerables/web-dvwa
@@ -30,7 +70,7 @@ services:
     cap_add:
       - NET_ADMIN
     post_start:
-       - command: ip route del default; ip route add default via 172.28.0.1
+       - command: /bin/sh -c "ip route del default; ip route add default via 172.28.0.1"
     depends_on:
       perimeter:
         condition: service_healthy
@@ -45,8 +85,10 @@ services:
     restart: unless-stopped
     entrypoint: "/sbin/init"
     ports:  # Remember to use 127.0.0.1, NOT localhost
-      - 5000:5000 # dvwa   <-------- NOT WORKING
+      - 5000:5000 # dvwa
       - 8080:80 # LuCI perimeter
+      - 8081:8081 # LuCI enterprise
+      - 8082:8082 # LuCI industrial
     volumes:
       - ./config/router/perimeter/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
@@ -59,19 +101,67 @@ services:
     networks:
       n0_internet:
         ipv4_address: 172.30.0.2
-      n10_client:
-        ipv4_address: 172.29.0.1
+      # n10_client:
+      #   ipv4_address: 172.29.0.1
       n20_dmz:
         ipv4_address: 172.28.0.1
-      # zzz999_management:
-      #   ipv4_address: 10.0.0.2
+      n30_per2ent:
+        ipv4_address: 172.50.0.1
+  
+  enterprise:
+    image: openwrt/rootfs:x86_64-openwrt-23.05
+    hostname: enterprise
+    restart: unless-stopped
+    entrypoint: "/sbin/init"
+    volumes:
+      - ./config/router/enterprise/init.sh:/etc/uci-defaults/init.sh
+    healthcheck:
+      test: test -e /.started && (ping -c 4 172.50.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      perimeter:
+        condition: service_healthy
+    privileged: true
+    networks:
+      n30_per2ent:
+        ipv4_address: 172.50.0.2
+      n40_enterprise:
+        ipv4_address: 172.60.0.1
+      n50_ent2ind:
+        ipv4_address: 172.80.0.1
+
+  industrial:
+    image: openwrt/rootfs:x86_64-openwrt-23.05
+    hostname: industrial
+    restart: unless-stopped
+    entrypoint: "/sbin/init"
+    volumes:
+      - ./config/router/industrial/init.sh:/etc/uci-defaults/init.sh
+    healthcheck:
+      test: test -e /.started && (ping -c 4 172.80.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      enterprise:
+        condition: service_healthy
+    privileged: true
+    networks:
+      n50_ent2ind:
+        ipv4_address: 172.80.0.2
+      n60_industrial:
+        ipv4_address: 172.90.0.1
 
 networks:
   n0_internet:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.30.0.0/29
+        - subnet: 172.30.0.0/24
           gateway: 172.30.0.1
 
   # n0_internet:
@@ -86,7 +176,7 @@ networks:
   #    - "fdt.passthrough"
   #   ipam:
   #     config:
-  #       - subnet: 172.30.0.0/29
+  #       - subnet: 172.30.0.0/24
   #         gateway: 172.30.0.1
 
   # client:
@@ -98,18 +188,18 @@ networks:
   #       - subnet: 172.29.0.0/24
 
 
-  n10_client:
-    driver: dovesnap
-    internal: true
-    driver_opts:
-     ovs.bridge.mode: flat
-     ovs.bridge.dpid: "0x110" 
-     ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
-     ovs.bridge.preallocate_ports: 12
-    ipam:
-      config:
-        - subnet: 172.29.0.0/24
-          gateway: 172.29.0.253
+  # n10_client:
+  #   driver: dovesnap
+  #   internal: true
+  #   driver_opts:
+  #    ovs.bridge.mode: flat
+  #    ovs.bridge.dpid: "0x110" 
+  #    ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
+  #    ovs.bridge.preallocate_ports: 12
+  #   ipam:
+  #     config:
+  #       - subnet: 172.29.0.0/24
+  #         gateway: 172.29.0.253
   
   # dmz:
   #   name: dmz
@@ -132,18 +222,54 @@ networks:
         - subnet: 172.28.0.0/24
           gateway: 172.28.0.253
 
-
-  # zzz999_management:
-  #   driver: dovesnap
-  #   internal: true
-  #   driver_opts:
-  #    ovs.bridge.mode: nat
-  #    ovs.bridge.dpid: "0x1000" 
-  #    ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
-  #    ovs.bridge.preallocate_ports: 25
-  #   labels:
-  #     - "fdt.passthrough"
-  #   ipam:
-  #     config:
-  #       - subnet: 10.0.0.0/24
-  #         gateway: 10.0.0.1
+  n30_per2ent:
+    driver: dovesnap
+    internal: true
+    driver_opts:
+     ovs.bridge.mode: flat
+     ovs.bridge.dpid: "0x130" 
+     ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
+     ovs.bridge.preallocate_ports: 12
+    ipam:
+      config:
+        - subnet: 172.50.0.0/24
+          gateway: 172.50.0.253
+  
+  n40_enterprise:
+    driver: dovesnap
+    internal: true
+    driver_opts:
+     ovs.bridge.mode: flat
+     ovs.bridge.dpid: "0x140" 
+     ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
+     ovs.bridge.preallocate_ports: 12
+    ipam:
+      config:
+        - subnet: 172.60.0.0/24
+          gateway: 172.60.0.253
+  
+  n50_ent2ind:
+    driver: dovesnap
+    internal: true
+    driver_opts:
+     ovs.bridge.mode: flat
+     ovs.bridge.dpid: "0x150" 
+     ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
+     ovs.bridge.preallocate_ports: 12
+    ipam:
+      config:
+        - subnet: 172.80.0.0/24
+          gateway: 172.80.0.253
+  
+  n60_industrial:
+    driver: dovesnap
+    internal: true
+    driver_opts:
+     ovs.bridge.mode: flat
+     ovs.bridge.dpid: "0x160" 
+     ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
+     ovs.bridge.preallocate_ports: 12
+    ipam:
+      config:
+        - subnet: 172.90.0.0/24
+          gateway: 172.90.0.253

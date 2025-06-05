@@ -67,7 +67,7 @@ services:
       - dovesnap
     volumes:
       - /var/log/gauge:/var/log/gauge
-      - ../configs/dovesnap/gauge.yaml:/etc/faucet/gauge.yaml
+      - ../config/dovesnap/gauge.yaml:/etc/faucet/gauge.yaml
       - '${FAUCET_PREFIX}/etc/faucet:/etc/faucet'
     ports:
       - '6654:6653'

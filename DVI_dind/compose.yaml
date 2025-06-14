@@ -1,24 +1,4 @@
 services:
-  # alpineClient:
-  #   image: alpine
-  #   healthcheck:
-  #     test: ping -c 5 172.29.0.1 > /dev/null 2>&1 || exit 1
-  #     interval: 20s
-  #     timeout: 10s
-  #     retries: 5
-  #     start_period: 30s
-  #   depends_on:
-  #     perimeter:
-  #       condition: service_healthy
-  #   cap_add:
-  #     - NET_ADMIN
-  #   post_start:
-  #      - command: /bin/sh -c "ip route del default; ip route add default via 172.29.0.1"
-  #   entrypoint: tail -f /dev/null
-  #   networks:
-  #     n10_client:
-  #       ipv4_address: 172.29.0.2
-
   alpineEnterprise:
     image: alpine
     healthcheck:
@@ -32,8 +12,14 @@ services:
         condition: service_healthy
     cap_add:
       - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "ip route del default; ip route add default via 172.60.0.1"
+       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
     entrypoint: tail -f /dev/null
     networks:
       n40_enterprise:
@@ -52,8 +38,14 @@ services:
         condition: service_healthy
     cap_add:
       - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "ip route del default; ip route add default via 172.90.0.1"
+       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
     entrypoint: tail -f /dev/null
     networks:
       n60_industrial:
@@ -69,14 +61,49 @@ services:
       start_period: 30s
     cap_add:
       - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    environment:
+      - GATEWAY=172.28.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "ip route del default; ip route add default via 172.28.0.1"
+       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
     depends_on:
       perimeter:
         condition: service_healthy
     networks:
       n20_dmz:
         ipv4_address: 172.28.0.2
+
+  dns:
+    build: framework/dns
+    healthcheck:
+      test: ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.28.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+    post_start:
+       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+    volumes:
+      - ./config/dns/db.campus-savona.dt:/etc/bind/db.campus-savona.dt:ro
+      - ./config/dns/db.campus-savona.local:/etc/bind/db.campus-savona.local:ro
+      - ./config/dns/named.conf.local:/etc/bind/named.conf.local:ro
+      - ./config/dns/named.conf.options:/etc/bind/named.conf.options:ro
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    depends_on:
+      perimeter:
+        condition: service_healthy
+    networks:
+      n20_dmz:
+        ipv4_address: 172.28.0.3      
 
 
   perimeter:
@@ -163,51 +190,6 @@ networks:
       config:
         - subnet: 172.30.0.0/24
           gateway: 172.30.0.1
-
-  # n0_internet:
-  #   driver: dovesnap
-  #   internal: true
-  #   driver_opts:
-  #    ovs.bridge.mode: nat
-  #    ovs.bridge.dpid: "0x100" 
-  #    ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
-  #    ovs.bridge.preallocate_ports: 12
-  #   labels:
-  #    - "fdt.passthrough"
-  #   ipam:
-  #     config:
-  #       - subnet: 172.30.0.0/24
-  #         gateway: 172.30.0.1
-
-  # client:
-  #   name: client
-  #   driver: macvlan
-  #   internal: true
-  #   ipam:
-  #     config:
-  #       - subnet: 172.29.0.0/24
-
-
-  # n10_client:
-  #   driver: dovesnap
-  #   internal: true
-  #   driver_opts:
-  #    ovs.bridge.mode: flat
-  #    ovs.bridge.dpid: "0x110" 
-  #    ovs.bridge.controller: "tcp:127.0.0.1:6653,tcp:127.0.0.1:6654"
-  #    ovs.bridge.preallocate_ports: 12
-  #   ipam:
-  #     config:
-  #       - subnet: 172.29.0.0/24
-  #         gateway: 172.29.0.253
-  
-  # dmz:
-  #   name: dmz
-  #   driver: macvlan
-  #   internal: true
-  #   ipam:
-  #     config:
-  #       - subnet: 172.28.0.0/24
 
   n20_dmz:
     driver: dovesnap

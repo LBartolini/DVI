@@ -1,0 +1,27 @@
+$TTL 604800
+@ IN SOA ns.campus-savona.local. root.campus-savona.local. ( 2 604800 86400 2419200 604800 )
+@ IN NS  ns.campus-savona.local.
+;
+@       IN      A     172.28.0.2
+ns                    IN      A     172.28.0.3
+
+bind9                 IN      CNAME ns
+www                   IN      CNAME @
+
+ditto                 IN      A     172.60.0.99
+scada                 IN      A     172.60.0.100
+workflows             IN      A     172.60.0.101
+
+cabinet_delfino       IN      A     172.90.0.50
+cabinet_lagorio       IN      A     172.90.0.51
+cabinet_marchi        IN      A     172.90.0.52
+cabinet_locatelli     IN      A     172.90.0.53
+cabinet_seb           IN      A     172.90.0.54
+cabinet_biblioteca    IN      A     172.90.0.55
+
+cabinets.delfino      IN      CNAME cabinet_delfino
+cabinets.lagorio      IN      CNAME cabinet_lagorio
+cabinets.marchi       IN      CNAME cabinet_marchi
+cabinets.locatelli    IN      CNAME cabinet_locatelli
+cabinets.seb          IN      CNAME cabinet_seb
+cabinets.biblioteca   IN      CNAME cabinet_biblioteca

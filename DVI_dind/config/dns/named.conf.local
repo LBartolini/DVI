@@ -1,0 +1,10 @@
+// Public
+zone "campus-savona.dt" IN {
+  type master;
+  file "/etc/bind/db.campus-savona.dt";
+};
+// Private
+zone "campus-savona.local" IN {
+  type master;
+  file "/etc/bind/db.campus-savona.local";
+};

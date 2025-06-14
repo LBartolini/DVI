@@ -3,10 +3,10 @@ services:
     image: alpine
     healthcheck:
       test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     depends_on:
       enterprise:
         condition: service_healthy
@@ -29,10 +29,10 @@ services:
     image: alpine
     healthcheck:
       test: ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     depends_on:
       industrial:
         condition: service_healthy
@@ -55,10 +55,10 @@ services:
     image: vulnerables/web-dvwa
     healthcheck:
       test: ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     cap_add:
       - NET_ADMIN
     volumes:
@@ -80,10 +80,10 @@ services:
     build: framework/dns
     healthcheck:
       test: ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     cap_add:
       - NET_ADMIN
     environment:
@@ -120,10 +120,10 @@ services:
       - ./config/router/perimeter/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
       test: test -e /.started && (ping -c 4 8.8.8.8 > /dev/null 2>&1 || exit 1)
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     privileged: true
     networks:
       n0_internet:
@@ -144,10 +144,10 @@ services:
       - ./config/router/enterprise/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
       test: test -e /.started && (ping -c 4 172.50.0.1 > /dev/null 2>&1 || exit 1)
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     depends_on:
       perimeter:
         condition: service_healthy
@@ -169,10 +169,10 @@ services:
       - ./config/router/industrial/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
       test: test -e /.started && (ping -c 4 172.80.0.1 > /dev/null 2>&1 || exit 1)
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     depends_on:
       enterprise:
         condition: service_healthy

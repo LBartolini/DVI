@@ -11,10 +11,10 @@ do
         echo "All containers Healthy :)"
         break
     fi
-    echo "Some containers unhealthy. Restarting and retrying!"
+    echo "Some containers unhealthy. Stopping and retrying!"
 
     for container in $unhealthy_containers
     do
-        docker restart $container
+        docker stop $container
     done
 done

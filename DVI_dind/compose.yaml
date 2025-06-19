@@ -24,6 +24,34 @@ services:
     networks:
       n40_enterprise:
         ipv4_address: 172.60.0.2
+  
+  scada-db:
+    #image: vulhub/mysql:5.5.23
+    build: framework/db_vulhub
+    healthcheck:
+      test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      enterprise:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - MYSQL_ROOT_PASSWORD=root
+    post_start:
+       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.3
+
 
   alpineIndustrial:
     image: alpine

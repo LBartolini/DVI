@@ -26,7 +26,6 @@ services:
         ipv4_address: 172.60.0.2
   
   scada-db:
-    #image: vulhub/mysql:5.5.23
     build: framework/db_vulhub
     healthcheck:
       test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
@@ -156,8 +155,6 @@ services:
     networks:
       n0_internet:
         ipv4_address: 172.30.0.2
-      # n10_client:
-      #   ipv4_address: 172.29.0.1
       n20_dmz:
         ipv4_address: 172.28.0.1
       n30_per2ent:

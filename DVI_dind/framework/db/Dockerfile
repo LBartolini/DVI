@@ -1,3 +1,3 @@
-FROM vulhub/mysql:5.5.23
+FROM mariadb:10.5.9
 RUN apt update && apt install -y iputils-ping
 CMD [ "mysqld" ]

@@ -26,7 +26,7 @@ dvi-dovesnap-up: # starts Dovesnap inside Dind
 	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI/framework/dovesnap; docker compose -f dovesnap.yml up -d"
 
 dvi-dovesnap-down: # starts Dovesnap inside Dind
-	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI/framework/dovesnap; docker compose -f dovesnap.yml down"
+	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI/framework/dovesnap; docker compose -f dovesnap.yml down --volumes"
 
 dvi-sysctl: # Executes sysctl tweak script inside Dind
 	docker exec dvi-dind-1 /bin/sh -c "sysctl -w fs.inotify.max_user_instances=262144"

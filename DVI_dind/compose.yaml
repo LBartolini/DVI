@@ -2,7 +2,7 @@ services:
   alpineEnterprise:
     image: alpine
     healthcheck:
-      test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -13,22 +13,55 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./framework/initial_setup.sh:/initial_setup.sh
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
     environment:
       - GATEWAY=172.60.0.1
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
     entrypoint: tail -f /dev/null
     networks:
       n40_enterprise:
         ipv4_address: 172.60.0.2
+
+  scada:
+    build: framework/scada
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      enterprise:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - DB_HOST=172.60.0.3
+      - DB_PORT=3306
+      - SCADA_DB_NAME=scadalts
+      - SCADA_DB_USER=scadalts
+      - SCADA_DB_PASS=scadalts
+      - JAVA_OPTS=-XX:+UseStringDeduplication -Xms1m -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=20
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scada/uploads:/scada-lts-uploads:ro
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.4
   
   scada-db:
-    build: framework/db_vulhub
+    #build: framework/db_vulhub
+    build: framework/db
     healthcheck:
-      test: ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -39,14 +72,16 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./framework/initial_setup.sh:/initial_setup.sh
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - scada_db:/var/lib/mysql
+      - ./config/scada_db:/docker-entrypoint-initdb.d:ro
     environment:
       - GATEWAY=172.60.0.1
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
       - MYSQL_ROOT_PASSWORD=root
     post_start:
-       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
     networks:
       n40_enterprise:
         ipv4_address: 172.60.0.3
@@ -55,7 +90,7 @@ services:
   alpineIndustrial:
     image: alpine
     healthcheck:
-      test: ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -66,13 +101,13 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./framework/initial_setup.sh:/initial_setup.sh
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
     environment:
       - GATEWAY=172.90.0.1
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
     entrypoint: tail -f /dev/null
     networks:
       n60_industrial:
@@ -81,7 +116,7 @@ services:
   dvwa:
     image: vulnerables/web-dvwa
     healthcheck:
-      test: ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1
+      test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -89,13 +124,13 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./framework/initial_setup.sh:/initial_setup.sh
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
     environment:
       - GATEWAY=172.28.0.1
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
     depends_on:
       perimeter:
         condition: service_healthy
@@ -106,7 +141,7 @@ services:
   dns:
     build: framework/dns
     healthcheck:
-      test: ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1
+      test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -118,13 +153,13 @@ services:
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
     post_start:
-       - command: /bin/sh -c "chmod +x initial_setup.sh; ./initial_setup.sh"
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
     volumes:
       - ./config/dns/db.campus-savona.dt:/etc/bind/db.campus-savona.dt:ro
       - ./config/dns/db.campus-savona.local:/etc/bind/db.campus-savona.local:ro
       - ./config/dns/named.conf.local:/etc/bind/named.conf.local:ro
       - ./config/dns/named.conf.options:/etc/bind/named.conf.options:ro
-      - ./framework/initial_setup.sh:/initial_setup.sh
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
     depends_on:
       perimeter:
         condition: service_healthy
@@ -140,6 +175,7 @@ services:
     entrypoint: "/sbin/init"
     ports:  # Remember to use 127.0.0.1, NOT localhost
       - 5000:5000 # dvwa
+      - 5001:5001 # scada
       - 8080:80 # LuCI perimeter
       - 8081:8081 # LuCI enterprise
       - 8082:8082 # LuCI industrial
@@ -280,3 +316,6 @@ networks:
       config:
         - subnet: 172.90.0.0/24
           gateway: 172.90.0.253
+
+volumes:
+  scada_db:

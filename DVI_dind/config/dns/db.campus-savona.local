@@ -8,9 +8,10 @@ ns                    IN      A     172.28.0.3
 bind9                 IN      CNAME ns
 www                   IN      CNAME @
 
-scada-db              IN      A     172.60.0.3
+scadadb               IN      A     172.60.0.3
 ditto                 IN      A     172.60.0.99
-scada                 IN      A     172.60.0.100
+scada                 IN      A     172.60.0.4
+camunda               IN      A     172.60.0.5
 workflows             IN      A     172.60.0.101
 
 cabinet_delfino       IN      A     172.90.0.50

@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     ports: # Remember to use 127.0.0.1, NOT localhost
       - 5000:5000 # dvwa
+      - 5001:5001 # scada
       - 8080:8080 # LuCI perimeter
       - 8081:8081 # LuCI enterprise
       - 8082:8082 # LuCI industrial

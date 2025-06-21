@@ -40,7 +40,7 @@ RUN /opt/apache-ant/bin/ant -lib lib/ war
 #
 FROM tomcat:9.0.46-jdk16-openjdk-slim-buster AS run
 # Healthcheck
-RUN apt-get update -qq && apt-get install -y curl wait-for-it
+RUN apt-get update -qq && apt-get install -y curl wait-for-it iputils-ping iproute2
 WORKDIR /usr/local/tomcat/
 # ScadaLTS
 COPY --from=build /usr/local/src/Scada-LTS/WebContent/WEB-INF/lib/mysql-connector-java-3.1.8-bin.jar  /usr/local/tomcat/lib

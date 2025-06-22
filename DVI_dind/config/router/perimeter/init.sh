@@ -165,6 +165,15 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].dest_ip='172.60.0.4'
   set firewall.@redirect[-1].dest_port='8080'
 
+  # Port forwarding to Scada
+  add firewall redirect
+  set firewall.@redirect[-1].target='DNAT'
+  set firewall.@redirect[-1].name='BPMN Viewer'
+  set firewall.@redirect[-1].src='internet'
+  set firewall.@redirect[-1].src_dport='5002'
+  set firewall.@redirect[-1].dest_ip='172.60.0.8'
+  set firewall.@redirect[-1].dest_port='80'
+
   # Port forwarding to Enterprise LuCI
   add firewall redirect
   set firewall.@redirect[-1].target='DNAT'

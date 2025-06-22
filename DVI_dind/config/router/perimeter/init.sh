@@ -170,7 +170,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].target='DNAT'
   set firewall.@redirect[-1].name='Enterprise LuCI'
   set firewall.@redirect[-1].src='internet'
-  set firewall.@redirect[-1].src_dport='8081'
+  set firewall.@redirect[-1].src_dport='8082'
   set firewall.@redirect[-1].dest_ip='172.50.0.2'
   set firewall.@redirect[-1].dest_port='80'
 
@@ -179,7 +179,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].target='DNAT'
   set firewall.@redirect[-1].name='Industrial LuCI'
   set firewall.@redirect[-1].src='internet'
-  set firewall.@redirect[-1].src_dport='8082'
+  set firewall.@redirect[-1].src_dport='8083'
   set firewall.@redirect[-1].dest_ip='172.80.0.2'
   set firewall.@redirect[-1].dest_port='80'
 

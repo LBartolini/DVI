@@ -2,12 +2,17 @@ services:
   dind:
     image: docker:28.2-dind
     restart: unless-stopped
-    ports: # Remember to use 127.0.0.1, NOT localhost
+    ports:
       - 5000:5000 # dvwa
       - 5001:5001 # scada
-      - 8080:8080 # LuCI perimeter
-      - 8081:8081 # LuCI enterprise
-      - 8082:8082 # LuCI industrial
+      - 5002:5002 # bpmn viewer
+      - 5003:5003 # 
+      - 5004:5004 # 
+      - 5005:5005 # 
+      - 5006:5006 # 
+      - 8081:8081 # LuCI perimeter
+      - 8082:8082 # LuCI enterprise
+      - 8083:8083 # LuCI industrial
     volumes:
       - ./DVI_dind:/DVI
     privileged: true

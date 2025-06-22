@@ -1,5 +1,7 @@
 #!/bin/sh
 
+ping -c 1 127.0.0.1
+
 ip route del default
 ip route add default via $GATEWAY
 

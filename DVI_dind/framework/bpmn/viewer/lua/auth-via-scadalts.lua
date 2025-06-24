@@ -23,12 +23,12 @@ if not res then
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 if res.status ~= ngx.HTTP_OK then
-  ngx.log(ngx.WARN, 'ScadaLTS failed login for user', username, 'status is', res.status)
+  ngx.log(ngx.WARN, 'ScadaLTS failed login for user ', username, ' status is ', res.status)
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 if res.body ~= 'true' then
-  ngx.log(ngx.WARN, 'ScadaLTS failed login for user', username)
+  ngx.log(ngx.WARN, 'ScadaLTS failed login for user ', username)
   return_unauthorized()
 end
-ngx.log(ngx.WARN, 'ScadaLTS login successful for user', username)
+ngx.log(ngx.WARN, 'ScadaLTS login successful for user ', username)
 ngx.exit(ngx.OK)

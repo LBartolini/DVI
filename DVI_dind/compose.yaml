@@ -195,7 +195,7 @@ services:
       - GATEWAY=172.60.0.1
       - DNS=172.28.0.3
       - DNS_BASE_SEARCH=campus-savona.local
-      - SCADALTS_URL=http://172.60.0.5:8080/ScadaLTS
+      - SCADALTS_URL=http://172.60.0.4:8080/ScadaLTS
     volumes:
       - ./framework/initial_setup.sh:/initial_setup.sh:ro
       - ./config/bpmn/definitions:/srv/workflows:ro

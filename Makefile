@@ -19,6 +19,9 @@ dvi-stop: # stops DVI inside Dind
 dvi-down: # down DVI inside Dind
 	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; docker compose down"
 
+dvi-build: # build DVI inside Dind
+	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; docker compose build"
+
 dvi-ps: # docker ps inside Dind
 	docker exec dvi-dind-1 /bin/sh -c "cd /DVI; docker compose ps"
 

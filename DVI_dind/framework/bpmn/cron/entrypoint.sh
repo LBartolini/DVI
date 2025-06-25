@@ -16,11 +16,11 @@ while true; do
   for f in "${CRON_DIR}"/*; do
     if [ -x "$f" ]; then
       # Executable
-      echo "Running $f"
+      echo "\nRunning $f"
       "$f"
     else
       # Shell script
-      echo "Running script $f"
+      echo "\nRunning script $f"
       if [ -x "$(command -v bash)" ]; then
         bash "$f"
       else
@@ -28,5 +28,5 @@ while true; do
       fi
     fi
   done
-  echo ""
+  echo "\n\n"
 done

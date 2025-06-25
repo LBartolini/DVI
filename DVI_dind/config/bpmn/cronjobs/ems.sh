@@ -4,13 +4,13 @@ curl \
   -H "Content-Type: application/json" \
   -X POST \
   --data @- \
-  http://camunda:8080/engine-rest/process-definition/key/ems/start <<EOF
+  "http://${CAMUNDA_HOST}:${CAMUNDA_PORT}/engine-rest/process-definition/key/ems/start" <<EOF
 {
   "variables": {
     "debug": { "value": true, "type": "Boolean" },
     "debug_simulated_batteryless_surplus": { "value": null },
     "debug_simulated_overall_surplus": { "value": null },
-    "scadalts_api_host": { "value": "scada:8080" },
+    "scadalts_api_host": { "value": "${SCADA_HOST}:${SCADA_PORT}" },
     "scadalts_api_username": { "value": "admin" },
     "scadalts_api_password": { "value": "admin" },
     "turbine_energy_store_charge_hi": { "value": 60.0 },

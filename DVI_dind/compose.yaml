@@ -1,4 +1,6 @@
 services:
+
+###### ENTERPRISE 
   alpineEnterprise:
     image: alpine
     healthcheck:
@@ -27,7 +29,7 @@ services:
   
   enterprise-db:
     #build: framework/db_vulhub
-    build: framework/db
+    build: framework/db/mariadb
     healthcheck:
       test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
@@ -210,7 +212,132 @@ services:
     networks:
       n40_enterprise:
         ipv4_address: 172.60.0.8
+  
+  ditto-db:
+    mem_limit: 128m
+    build: framework/db/mongo
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s      
+    depends_on:
+      enterprise:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ditto_db:/data/db
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"      
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.9
 
+  ditto-register:
+    build: framework/ditto/register
+    restart: on-failure
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s      
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local    
+      - IT_UNIGE_FDT_DITTO_URL=ws://ditto-frontend
+      - IT_UNIGE_FDT_DITTO_USERNAME=administrator
+      - IT_UNIGE_FDT_DITTO_PASSWORD=secret
+      - IT_UNIGE_FDT_DEFINITIONS_PATH=/ditto-data
+      - JAVA_OPTS=-XX:+UseStringDeduplication -Xms1m -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=20
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/ditto:/ditto-data:ro
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"       
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.10
+
+  ditto:
+    build: framework/ditto/binpack
+    restart: on-failure
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s  
+    cap_add:
+      - NET_ADMIN        
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - INSTANCE_INDEX="1"
+      - MONGO_DB_HOSTNAME=ditto-db
+      - BIND_HOSTNAME=0.0.0.0
+      - ENABLE_PRE_AUTHENTICATION=true
+      - DEVOPS_PASSWORD=password
+      - JAVA_OPTS=-XX:+UseStringDeduplication -Xms1m -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=20
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"          
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.11
+  
+  ditto-frontend:
+    build: framework/ditto/frontend
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s  
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_PLAINTEXT_CREDENTIALS=y
+      - FDT_CREDENTIALS=
+          administrator:secret
+          backend:secret
+          camunda-people-simulator:secret
+          sun-simulator:secret
+          people-simulator:secret
+          energy-store-1:secret
+          gas-generator-1:secret
+          solar-panel-1:secret
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"          
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.12
+
+###### INDUSTRIAL 
   alpineIndustrial:
     image: alpine
     healthcheck:
@@ -236,7 +363,8 @@ services:
     networks:
       n60_industrial:
         ipv4_address: 172.90.0.2
-  
+
+###### DMZ 
   dvwa:
     image: vulnerables/web-dvwa
     healthcheck:
@@ -291,6 +419,7 @@ services:
       n20_dmz:
         ipv4_address: 172.28.0.3      
 
+###### ROUTER 
 
   perimeter:
     image: openwrt/rootfs:x86_64-openwrt-23.05
@@ -448,3 +577,4 @@ networks:
 
 volumes:
   scada_db:
+  ditto_db:

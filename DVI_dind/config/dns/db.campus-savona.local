@@ -12,8 +12,10 @@ enterprise-db         IN      A     172.60.0.3
 scada                 IN      A     172.60.0.4
 camunda               IN      A     172.60.0.5
 bpmn-viewer           IN      A     172.60.0.8
-ditto                 IN      A     172.60.0.99
-ditto-frontend        IN      A     172.60.0.100
+ditto-db              IN      A     172.60.0.9
+ditto                 IN      A     172.60.0.11
+ditto-frontend        IN      A     172.60.0.12
+frontend              IN      A     172.60.0.12
 
 cabinet_delfino       IN      A     172.90.0.50
 cabinet_lagorio       IN      A     172.90.0.51

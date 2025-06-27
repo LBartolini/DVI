@@ -1,0 +1,2 @@
+docker
+pymodbus[twisted]==2.5.3

@@ -1,4 +1,6 @@
 services:
+
+###### ENTERPRISE 
   alpineEnterprise:
     image: alpine
     healthcheck:
@@ -27,7 +29,7 @@ services:
   
   enterprise-db:
     #build: framework/db_vulhub
-    build: framework/db
+    build: framework/db/mariadb
     healthcheck:
       test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
@@ -210,7 +212,134 @@ services:
     networks:
       n40_enterprise:
         ipv4_address: 172.60.0.8
+  
+  ditto-db:
+    mem_limit: 128m
+    build: framework/db/mongo
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s      
+    depends_on:
+      enterprise:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ditto_db:/data/db
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"      
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.9
 
+  ditto-register:
+    build: framework/ditto/register
+    restart: on-failure
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    cap_add:
+      - NET_ADMIN        
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s      
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local    
+      - IT_UNIGE_FDT_DITTO_URL=ws://ditto-frontend
+      - IT_UNIGE_FDT_DITTO_USERNAME=administrator
+      - IT_UNIGE_FDT_DITTO_PASSWORD=secret
+      - IT_UNIGE_FDT_DEFINITIONS_PATH=/ditto-data
+      - JAVA_OPTS=-XX:+UseStringDeduplication -Xms1m -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=20
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/ditto:/ditto-data:ro
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"       
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.10
+
+  ditto:
+    build: framework/ditto/binpack
+    restart: on-failure
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s  
+    cap_add:
+      - NET_ADMIN        
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - INSTANCE_INDEX="1"
+      - MONGO_DB_HOSTNAME=ditto-db
+      - BIND_HOSTNAME=0.0.0.0
+      - ENABLE_PRE_AUTHENTICATION=true
+      - DEVOPS_PASSWORD=password
+      - JAVA_OPTS=-XX:+UseStringDeduplication -Xms1m -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=20
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"          
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.11
+  
+  ditto-frontend:
+    build: framework/ditto/frontend
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s  
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_PLAINTEXT_CREDENTIALS=y
+      - FDT_CREDENTIALS=
+          administrator:secret
+          backend:secret
+          camunda-people-simulator:secret
+          sun-simulator:secret
+          people-simulator:secret
+          energy-store-1:secret
+          gas-generator-1:secret
+          solar-panel-1:secret
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"          
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.12
+
+###### INDUSTRIAL 
   alpineIndustrial:
     image: alpine
     healthcheck:
@@ -236,7 +365,556 @@ services:
     networks:
       n60_industrial:
         ipv4_address: 172.90.0.2
+
+  sun-simulator:
+    build: framework/scriptablesensor
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scriptablesensor:/FDT:ro
+      - ./config/scriptablesensor-cache/solar-data-2016.json:/var/cache/scriptablesensor/347bcae3021fbf561ff11fc50d6a240eaa78699743c752bbda89a7c3062fdbdf:ro
+    tmpfs:
+      - /var/cache/scriptablesensor
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_DITTO_URL=ws://ditto-frontend
+      - FDT_DITTO_USERNAME=sun-simulator
+      - FDT_DITTO_PASSWORD=secret
+      - FDT_SENSOR_JSON=/FDT/sun-simulator/sun-simulator.json
+      - FDT_SENSOR_JS=/FDT/sun-simulator/sun-simulator.js
+      - FDT_RESTUTIL_INSECURE='true'      
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.51
+
+  people-simulator:
+    build: framework/scriptablesensor
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scriptablesensor:/FDT:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_DITTO_URL=ws://ditto-frontend
+      - FDT_DITTO_USERNAME=people-simulator
+      - FDT_DITTO_PASSWORD=secret
+      - FDT_SENSOR_JSON=/FDT/people-simulator/people-simulator.json
+      - FDT_SENSOR_JS=/FDT/people-simulator/people-simulator.js   
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.52
+
+  energy-store-1:
+    build: framework/scriptablesensor
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scriptablesensor:/FDT:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_DITTO_URL=ws://ditto-frontend
+      - FDT_DITTO_USERNAME=energy-store-1
+      - FDT_DITTO_PASSWORD=secret
+      - FDT_SENSOR_JSON=/FDT/energy-store-1/energy-store-1.json
+      - FDT_SENSOR_JS=/FDT/energy-store-1/energy-store-1.js    
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.53
+
+  solar-panel-1:
+    build: framework/scriptablesensor
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scriptablesensor:/FDT:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_DITTO_URL=ws://ditto-frontend
+      - FDT_DITTO_USERNAME=solar-panel-1
+      - FDT_DITTO_PASSWORD=secret
+      - FDT_SENSOR_JSON=/FDT/solar-panel-1/solar-panel-1.json
+      - FDT_SENSOR_JS=/FDT/solar-panel-1/solar-panel-1.js      
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.54
+
+  gas-generator-1:
+    build: framework/scriptablesensor
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+      - ./config/scriptablesensor:/FDT:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - FDT_DITTO_URL=ws://ditto-frontend
+      - FDT_DITTO_USERNAME=gas-generator-1
+      - FDT_DITTO_PASSWORD=secret
+      - FDT_SENSOR_JSON=/FDT/gas-generator-1/gas-generator-1.json
+      - FDT_SENSOR_JS=/FDT/gas-generator-1/gas-generator-1.js      
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.55
+  cabinet_biblioteca:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=biblioteca
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.3
   
+  plc_biblioteca:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-biblioteca.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.13
+
+  clients_biblioteca:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: biblioteca
+      fdt.minload: 240
+      fdt.maxload: 260
+
+  cabinet_delfino:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=delfino
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.4
+  
+  plc_delfino:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-delfino.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.14
+
+  clients_delfino:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: delfino
+      fdt.minload: 240
+      fdt.maxload: 260 
+
+  cabinet_lagorio:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=lagorio
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.5
+  
+  plc_lagorio:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-lagorio.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.15
+
+  clients_lagorio:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: lagorio
+      fdt.minload: 240
+      fdt.maxload: 260
+
+  cabinet_marchi:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=marchi
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.6
+  
+  plc_marchi:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-marchi.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.16
+
+  clients_marchi:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: marchi
+      fdt.minload: 240
+      fdt.maxload: 260  
+
+  cabinet_locatelli:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=locatelli
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.7
+  
+  plc_locatelli:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-locatelli.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.17
+
+  clients_locatelli:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: locatelli
+      fdt.minload: 240
+      fdt.maxload: 260  
+
+  cabinet_seb:
+    build: framework/cabinet
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+      - ID=seb
+      - BASE=1560
+      - MAXLOAD=7500
+      - VERBOSE=1
+      - URL=tcp://docker_api_proxy:1337  
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.8
+  
+  plc_seb:
+    build: framework/openplc
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      industrial:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+    - ./config/openplc/trip.st:/data/main.st:ro
+    - ./config/openplc/modbus-slaves/cabinet-seb.cfg:/data/mbconfig.cfg:ro
+    - ./framework/initial_setup.sh:/initial_setup.sh:ro 
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
+    networks:
+      n60_industrial:
+        ipv4_address: 172.90.0.18
+
+  clients_seb:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: seb
+      fdt.minload: 240
+      fdt.maxload: 260     
+
+###### DMZ 
   dvwa:
     image: vulnerables/web-dvwa
     healthcheck:
@@ -289,8 +967,36 @@ services:
         condition: service_healthy
     networks:
       n20_dmz:
-        ipv4_address: 172.28.0.3      
+        ipv4_address: 172.28.0.3
 
+  docker_api_proxy:
+    build: framework/docker-api-proxy
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    environment:
+      - GATEWAY=172.28.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local
+    cap_add:
+      - NET_ADMIN      
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"      
+    depends_on:
+      perimeter:
+        condition: service_healthy
+    networks:
+      n20_dmz:
+        ipv4_address: 172.28.0.4              
+
+
+###### ROUTER 
 
   perimeter:
     image: openwrt/rootfs:x86_64-openwrt-23.05
@@ -448,3 +1154,4 @@ networks:
 
 volumes:
   scada_db:
+  ditto_db:

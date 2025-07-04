@@ -1244,10 +1244,10 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
+/*DELIMITER ;;
 CREATE DEFINER=`scadalts`@`%` PROCEDURE `prc_add_cmp_history`( in a_userId int(11), in a_viewAndCmpId varchar(50), in a_interpretedState varchar(50), in a_ts bigint(20), in a_list_of_values JSON)
 begin declare v_usr_name varchar(50); declare v_multiChangesHistoryId int(11); declare v_length bigint unsigned default JSON_LENGTH(a_list_of_values); declare v_index bigint unsigned default 0; declare v_data_point_id int(11); declare v_data_point_value varchar(50); select username into v_usr_name from users where id=a_userId; insert into multi_changes_history ( userId, username, viewAndComponentIdentification, interpretedState, ts ) values ( a_userId, v_usr_name, a_viewAndCmpId, a_interpretedState, a_ts); select last_insert_id() into v_multiChangesHistoryId; while v_index < v_length DO set v_data_point_value = (select JSON_EXTRACT(a_list_of_values, CONCAT('$[', v_index, '].value'))); set v_data_point_id = (select id from dataPoints where xid=(select JSON_EXTRACT(a_list_of_values, CONCAT('$[',v_index,'].xid')))); insert into values_multi_changes_history ( multiChangesHistoryId, value, dataPointId, ts) values ( v_multiChangesHistoryId, v_data_point_value, v_data_point_id, a_ts ); set v_index = v_index + 1; end while; CREATE TEMPORARY TABLE tmp_to_delete select id from multi_changes_history where viewAndComponentIdentification=a_viewAndCmpId order by ts desc limit 10; delete from multi_changes_history where id not in (select id from tmp_to_delete); DROP TEMPORARY TABLE tmp_to_delete; end ;;
-DELIMITER ;
+DELIMITER ;*/
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;

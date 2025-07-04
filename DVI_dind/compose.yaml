@@ -28,8 +28,8 @@ services:
         ipv4_address: 172.60.0.2
   
   enterprise-db:
-    #build: framework/db_vulhub
-    build: framework/db/mariadb
+    build: framework/db/mariadb-CVE-2012-2122
+    #build: framework/db/mariadb
     healthcheck:
       test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
@@ -43,8 +43,8 @@ services:
       - NET_ADMIN
     volumes:
       - ./framework/initial_setup.sh:/initial_setup.sh:ro
-      - scada_db:/var/lib/mysql
-      - ./config/scada_db:/docker-entrypoint-initdb.d:ro
+      - enterprise_db:/var/lib/mysql
+      - ./config/enterprise_db:/docker-entrypoint-initdb.d:ro
     environment:
       - GATEWAY=172.60.0.1
       - DNS=172.28.0.3
@@ -1153,5 +1153,5 @@ networks:
           gateway: 172.90.0.253
 
 volumes:
-  scada_db:
+  enterprise_db:
   ditto_db:

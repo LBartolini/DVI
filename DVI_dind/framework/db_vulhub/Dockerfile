@@ -1,3 +1,0 @@
-FROM vulhub/mysql:5.5.23
-RUN apt update && apt install -y iputils-ping
-CMD [ "mysqld" ]

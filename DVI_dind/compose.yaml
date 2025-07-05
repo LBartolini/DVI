@@ -339,6 +339,38 @@ services:
       n40_enterprise:
         ipv4_address: 172.60.0.12
 
+  windows:
+    image: dockurr/windows
+    depends_on:
+      enterprise:
+        condition: service_healthy 
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 5m      
+    environment:
+      - VERSION=xp
+      - DISK_SIZE=10G
+      - RAM_SIZE=8G
+      - GATEWAY=172.60.0.1
+      - DNS=172.28.0.3      
+      - DNS_BASE_SEARCH=campus-savona.local      
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - windows:/storage 
+      - ./framework/initial_setup.sh:/initial_setup.sh:ro
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"     
+    stop_grace_period: 1m
+    networks:
+      n40_enterprise:
+        ipv4_address: 172.60.0.13
+
 ###### INDUSTRIAL 
   alpineIndustrial:
     image: alpine
@@ -1007,8 +1039,9 @@ services:
       - 5000:5000 # dvwa
       - 5001:5001 # scada
       - 5002:5002 # bpmn viewer
-      - 5003:5003 # 
-      - 5004:5004 # 
+      - 5003:5003/tcp # Windows RDP
+      - 5003:5003/udp # Windows RDP
+      - 5004:5004 # Windows VNC
       - 5005:5005 # 
       - 5006:5006 # 
       - 8081:80 # LuCI perimeter
@@ -1155,3 +1188,4 @@ networks:
 volumes:
   enterprise_db:
   ditto_db:
+  windows:

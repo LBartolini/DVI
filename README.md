@@ -13,4 +13,6 @@ Make sure containers have access to the following commands: *ping*, *ip*
 
  - Enterprise DB: Improper Authentication (CVE-2012-2122)
 
+ - Windows: RCE (CVE-2019-0708)
+
  - OpenPLC: RCE (CVE-2024-34026)

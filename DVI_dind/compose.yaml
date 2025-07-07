@@ -597,6 +597,10 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local        
     cap_add:
       - NET_ADMIN    
     volumes:
@@ -662,6 +666,10 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local        
     cap_add:
       - NET_ADMIN    
     volumes:
@@ -728,7 +736,11 @@ services:
       industrial:
         condition: service_healthy
     cap_add:
-      - NET_ADMIN    
+      - NET_ADMIN   
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local       
     volumes:
     - ./config/openplc/trip.st:/data/main.st:ro
     - ./config/openplc/modbus-slaves/cabinet-lagorio.cfg:/data/mbconfig.cfg:ro
@@ -794,6 +806,10 @@ services:
         condition: service_healthy
     cap_add:
       - NET_ADMIN    
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local      
     volumes:
     - ./config/openplc/trip.st:/data/main.st:ro
     - ./config/openplc/modbus-slaves/cabinet-marchi.cfg:/data/mbconfig.cfg:ro
@@ -857,6 +873,10 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local        
     cap_add:
       - NET_ADMIN    
     volumes:
@@ -919,6 +939,10 @@ services:
       timeout: 5s
       retries: 2
       start_period: 10s
+    environment:
+      - GATEWAY=172.90.0.1
+      - DNS=172.28.0.3
+      - DNS_BASE_SEARCH=campus-savona.local      
     depends_on:
       industrial:
         condition: service_healthy

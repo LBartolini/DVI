@@ -13,6 +13,12 @@ inside: # access Shell inside Dind
 dvi-start: dvi-dovesnap-up dvi-sysctl # starts DVI inside Dind
 	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; chmod +x start.sh; ./start.sh"
 
+dvi-pause: # pauses DVI inside Dind
+	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; docker compose pause"
+
+dvi-unpause: # unpauses DVI inside Dind
+	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; docker compose unpause"
+
 dvi-stop: # stops DVI inside Dind
 	docker exec -it dvi-dind-1 /bin/sh -c "cd /DVI; docker compose stop"
 

@@ -14,5 +14,6 @@ for x in $FDT_CREDENTIALS; do
   fi
   printf '%s\n\n' "$HASH" >> /etc/nginx/nginx.htpasswd
 done
+sleep 3
 # Start nginx
 exec nginx -c /etc/nginx/nginx.conf -g 'daemon off;' "$@"

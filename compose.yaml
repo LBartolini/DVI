@@ -9,8 +9,8 @@ services:
       - 5003:5003/tcp # Windows RDP
       - 5003:5003/udp # Windows RDP
       - 5004:5004 # Windows VNC
-      - 5005:5005 # 
-      - 5006:5006 # 
+      - 5005:5005 # FTP 80
+      - 5006:5006 # FTP Admin 5466
       - 8081:8081 # LuCI perimeter
       - 8082:8082 # LuCI enterprise
       - 8083:8083 # LuCI industrial

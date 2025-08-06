@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<PORT_LISTENER Description="Wing FTP Server Domain Port Listener List">
+    <Port_Listener_List>
+        <Type>1</Type>
+        <Ip_Address>*</Ip_Address>
+        <Port>21</Port>
+        <GatewayHost></GatewayHost>
+        <GatewayPort>0</GatewayPort>
+        <EnableFastUDP>0</EnableFastUDP>
+    </Port_Listener_List>
+    <Port_Listener_List>
+        <Type>2</Type>
+        <Ip_Address>*</Ip_Address>
+        <Port>990</Port>
+        <GatewayHost></GatewayHost>
+        <GatewayPort>0</GatewayPort>
+        <EnableFastUDP>0</EnableFastUDP>
+    </Port_Listener_List>
+    <Port_Listener_List>
+        <Type>3</Type>
+        <Ip_Address>*</Ip_Address>
+        <Port>80</Port>
+        <GatewayHost></GatewayHost>
+        <GatewayPort>0</GatewayPort>
+        <EnableFastUDP>0</EnableFastUDP>
+    </Port_Listener_List>
+    <Port_Listener_List>
+        <Type>4</Type>
+        <Ip_Address>*</Ip_Address>
+        <Port>443</Port>
+        <GatewayHost></GatewayHost>
+        <GatewayPort>0</GatewayPort>
+        <EnableFastUDP>0</EnableFastUDP>
+    </Port_Listener_List>
+    <Port_Listener_List>
+        <Type>5</Type>
+        <Ip_Address>*</Ip_Address>
+        <Port>22</Port>
+        <GatewayHost></GatewayHost>
+        <GatewayPort>0</GatewayPort>
+        <EnableFastUDP>0</EnableFastUDP>
+    </Port_Listener_List>
+</PORT_LISTENER>

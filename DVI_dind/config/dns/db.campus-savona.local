@@ -5,6 +5,7 @@ $TTL 604800
 @                     IN      A     172.28.0.2
 ns                    IN      A     172.28.0.3
 docker_api_proxy      IN      A     172.28.0.4
+ftp                   IN      A     172.28.0.5
 
 bind9                 IN      CNAME ns
 www                   IN      CNAME @

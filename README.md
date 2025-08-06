@@ -1,6 +1,8 @@
 # DVI
 DamnVulnerableInfrastructure
 
+Required Docker Compose >=2.30.0
+
 ## Requirements for containers
 
 Make sure containers have access to the following commands: *ping*, *ip*
@@ -16,3 +18,5 @@ Make sure containers have access to the following commands: *ping*, *ip*
  - Windows: RCE (CVE-2019-0708)
 
  - OpenPLC: RCE (CVE-2024-34026)
+
+ - WingFTP: RCE (CVE-2025-47812 https://www.exploit-db.com/exploits/52347)

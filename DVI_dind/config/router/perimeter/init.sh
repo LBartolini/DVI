@@ -192,6 +192,24 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].dest_ip='172.60.0.13'
   set firewall.@redirect[-1].dest_port='8006'
 
+  # Port forwarding to FTP (80)
+  add firewall redirect
+  set firewall.@redirect[-1].target='DNAT'
+  set firewall.@redirect[-1].name='FTP (80)'
+  set firewall.@redirect[-1].src='internet'
+  set firewall.@redirect[-1].src_dport='5005'
+  set firewall.@redirect[-1].dest_ip='172.28.0.5'
+  set firewall.@redirect[-1].dest_port='80'
+
+  # Port forwarding to FTP (5466 Admin)
+  add firewall redirect
+  set firewall.@redirect[-1].target='DNAT'
+  set firewall.@redirect[-1].name='FTP Admin (5466)'
+  set firewall.@redirect[-1].src='internet'
+  set firewall.@redirect[-1].src_dport='5006'
+  set firewall.@redirect[-1].dest_ip='172.28.0.5'
+  set firewall.@redirect[-1].dest_port='5466'  
+
   # Port forwarding to Enterprise LuCI
   add firewall redirect
   set firewall.@redirect[-1].target='DNAT'

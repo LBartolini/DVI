@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_08l5lqf" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_08l5lqf" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.25.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
   <bpmn:process id="scale-human-clients" name="Scale human clients" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1o62rb1</bpmn:outgoing>
@@ -129,6 +129,9 @@ return fixed.sort { extractTrailingNumber(it.Names[0]) }</camunda:script>
       <bpmn:incoming>Flow_1o3eo3v</bpmn:incoming>
       <bpmn:outgoing>Flow_0b4248k</bpmn:outgoing>
       <bpmn:script>def container = containers[0]
+if (!container) {
+  throw new RuntimeException("No container found to extract example_container")
+}
 return container</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:scriptTask id="Activity_14mwh9k" name="Create missing containers" scriptFormat="groovy">
@@ -146,6 +149,10 @@ return container</bpmn:script>
 
 import org.camunda.connect.httpclient.impl.HttpConnectorImpl
 import groovy.json.JsonSlurper
+
+if (!example_container) {
+  throw new RuntimeException("example_container is null or not defined")
+}
 
 def http = new HttpConnectorImpl()
 def jsonSlurper = new JsonSlurper()
@@ -301,34 +308,6 @@ containers.eachWithIndex { ctr, i -&gt;
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="scale-human-clients">
-      <bpmndi:BPMNEdge id="Flow_0g3swns_di" bpmnElement="Flow_0g3swns">
-        <di:waypoint x="1170" y="120" />
-        <di:waypoint x="1242" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0puenxh_di" bpmnElement="Flow_0puenxh">
-        <di:waypoint x="360" y="120" />
-        <di:waypoint x="430" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0sm6mxz_di" bpmnElement="Flow_0sm6mxz">
-        <di:waypoint x="1010" y="120" />
-        <di:waypoint x="1070" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0qu4gjg_di" bpmnElement="Flow_0qu4gjg">
-        <di:waypoint x="860" y="120" />
-        <di:waypoint x="910" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0b4248k_di" bpmnElement="Flow_0b4248k">
-        <di:waypoint x="700" y="120" />
-        <di:waypoint x="760" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1o3eo3v_di" bpmnElement="Flow_1o3eo3v">
-        <di:waypoint x="530" y="120" />
-        <di:waypoint x="600" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1o62rb1_di" bpmnElement="Flow_1o62rb1">
-        <di:waypoint x="198" y="120" />
-        <di:waypoint x="260" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="162" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -353,6 +332,34 @@ containers.eachWithIndex { ctr, i -&gt;
       <bpmndi:BPMNShape id="Activity_0clglji_di" bpmnElement="Activity_0clglji">
         <dc:Bounds x="1070" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1o62rb1_di" bpmnElement="Flow_1o62rb1">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o3eo3v_di" bpmnElement="Flow_1o3eo3v">
+        <di:waypoint x="530" y="120" />
+        <di:waypoint x="600" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b4248k_di" bpmnElement="Flow_0b4248k">
+        <di:waypoint x="700" y="120" />
+        <di:waypoint x="760" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qu4gjg_di" bpmnElement="Flow_0qu4gjg">
+        <di:waypoint x="860" y="120" />
+        <di:waypoint x="910" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sm6mxz_di" bpmnElement="Flow_0sm6mxz">
+        <di:waypoint x="1010" y="120" />
+        <di:waypoint x="1070" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0puenxh_di" bpmnElement="Flow_0puenxh">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="430" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g3swns_di" bpmnElement="Flow_0g3swns">
+        <di:waypoint x="1170" y="120" />
+        <di:waypoint x="1242" y="120" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

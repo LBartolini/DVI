@@ -1,0 +1,7 @@
+Administration Panel (:5466) -> 
+User: admin 
+Pass: wingftp
+
+Default FTP (:21) -> 
+User: user 
+Pass: StrongPassword123

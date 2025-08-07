@@ -15,24 +15,17 @@ uci -q batch <<-EOF >/dev/null
   set network.internet.gateway='172.30.0.1'
   set network.internet.netmask='255.255.255.0'
 
-  # client interface
-  # set network.client=interface
-  # set network.client.proto=static
-  # set network.client.ifname=eth1
-  # set network.client.ipaddr='172.29.0.1'
-  # set network.client.netmask='255.255.255.0'
-
   # dmz interface
   set network.dmz=interface
   set network.dmz.proto=static
-  set network.dmz.ifname=eth1 # eth2 if client interface is present
+  set network.dmz.ifname=eth1
   set network.dmz.ipaddr='172.28.0.1'
   set network.dmz.netmask='255.255.255.0'
 
   # per2ent interface
   set network.per2ent=interface
   set network.per2ent.proto=static
-  set network.per2ent.ifname=eth2 # eth3 if client interface is present
+  set network.per2ent.ifname=eth2
   set network.per2ent.ipaddr='172.50.0.1'
   set network.per2ent.netmask='255.255.255.0'
 
@@ -87,15 +80,6 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@zone[-1].masq='1'
   commit firewall.@zone[-1]
 
-  # add firewall zone
-  # set firewall.@zone[-1]=zone
-  # set firewall.@zone[-1].name='client'
-  # set firewall.@zone[-1].network='client'
-  # set firewall.@zone[-1].input='ACCEPT'
-  # set firewall.@zone[-1].output='ACCEPT'
-  # set firewall.@zone[-1].forward='ACCEPT'
-  # commit firewall.@zone[-1]
-
   add firewall zone
   set firewall.@zone[-1]=zone
   set firewall.@zone[-1].name='dmz'
@@ -125,27 +109,21 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@forwarding[-1].src='per2ent'
   set firewall.@forwarding[-1].dest='internet'
 
-  # Forwarding between zones
-  # add firewall forwarding
-  # set firewall.@forwarding[-1].src='client'
-  # set firewall.@forwarding[-1].dest='dmz'
-  # add firewall forwarding
-  # set firewall.@forwarding[-1].src='dmz'
-  # set firewall.@forwarding[-1].dest='client'
-
   add firewall forwarding
   set firewall.@forwarding[-1].src='per2ent'
   set firewall.@forwarding[-1].dest='dmz'
-  add firewall forwarding
-  set firewall.@forwarding[-1].src='dmz'
-  set firewall.@forwarding[-1].dest='per2ent'
-
   # add firewall forwarding
-  # set firewall.@forwarding[-1].src='per2ent'
-  # set firewall.@forwarding[-1].dest='client'
-  # add firewall forwarding
-  # set firewall.@forwarding[-1].src='client'
+  # set firewall.@forwarding[-1].src='dmz'
   # set firewall.@forwarding[-1].dest='per2ent'
+
+  # Rule to allow FTP to Enterprise/Industrial
+  add firewall rule
+  set firewall.@rule[-1].name='Allow FTP to Enterprise/Industrial'
+  set firewall.@rule[-1].src='dmz'
+  set firewall.@rule[-1].src_ip='172.28.0.5'
+  set firewall.@rule[-1].dest='per2ent'
+  set firewall.@rule[-1].target='ACCEPT'
+  commit firewall  
 
   # Port forwarding to Web
   add firewall redirect
@@ -193,13 +171,13 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].dest_port='8006'
 
   # Port forwarding to FTP (80)
-  add firewall redirect
-  set firewall.@redirect[-1].target='DNAT'
-  set firewall.@redirect[-1].name='FTP (80)'
-  set firewall.@redirect[-1].src='internet'
-  set firewall.@redirect[-1].src_dport='5005'
-  set firewall.@redirect[-1].dest_ip='172.28.0.5'
-  set firewall.@redirect[-1].dest_port='80'
+  # add firewall redirect
+  # set firewall.@redirect[-1].target='DNAT'
+  # set firewall.@redirect[-1].name='FTP (80)'
+  # set firewall.@redirect[-1].src='internet'
+  # set firewall.@redirect[-1].src_dport='5005'
+  # set firewall.@redirect[-1].dest_ip='172.28.0.5'
+  # set firewall.@redirect[-1].dest_port='80'
 
   # Port forwarding to FTP (5466 Admin)
   add firewall redirect

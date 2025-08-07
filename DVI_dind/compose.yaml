@@ -382,6 +382,8 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+      ditto-frontend:
+        condition: service_healthy        
     cap_add:
       - NET_ADMIN
     volumes:
@@ -418,6 +420,8 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+      ditto-frontend:
+        condition: service_healthy        
     cap_add:
       - NET_ADMIN
     volumes:
@@ -450,6 +454,8 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+      ditto-frontend:
+        condition: service_healthy        
     cap_add:
       - NET_ADMIN
     volumes:
@@ -482,6 +488,8 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+      ditto-frontend:
+        condition: service_healthy        
     cap_add:
       - NET_ADMIN
     volumes:
@@ -514,6 +522,8 @@ services:
     depends_on:
       industrial:
         condition: service_healthy
+      ditto-frontend:
+        condition: service_healthy        
     cap_add:
       - NET_ADMIN
     volumes:
@@ -1096,13 +1106,13 @@ services:
     restart: unless-stopped
     entrypoint: "/sbin/init"
     ports:
-      - 5000:5000 # Web
+      - 5000:5000 # Web (Only access point for the system, all the other are just for management and debug tasks)
       - 5001:5001 # scada
       - 5002:5002 # bpmn viewer
       - 5003:5003/tcp # Windows RDP
       - 5003:5003/udp # Windows RDP
       - 5004:5004 # Windows VNC
-      - 5005:5005 # FTP 21
+      - 5005:5005 #
       - 5006:5006 # FTP Admin 5466
       - 8081:80 # LuCI perimeter
       - 8082:8082 # LuCI enterprise

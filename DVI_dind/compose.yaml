@@ -1078,7 +1078,7 @@ services:
       - 5003:5003/udp # Windows RDP
       - 5004:5004 # Windows VNC
       - 5005:5005 # FTP 21
-      - 5006:5006 # 
+      - 5006:5006 # FTP Admin 5466
       - 8081:80 # LuCI perimeter
       - 8082:8082 # LuCI enterprise
       - 8083:8083 # LuCI industrial

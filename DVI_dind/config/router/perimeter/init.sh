@@ -147,10 +147,10 @@ uci -q batch <<-EOF >/dev/null
   # set firewall.@forwarding[-1].src='client'
   # set firewall.@forwarding[-1].dest='per2ent'
 
-  # Port forwarding to DVWA
+  # Port forwarding to Web
   add firewall redirect
   set firewall.@redirect[-1].target='DNAT'
-  set firewall.@redirect[-1].name='DVWA'
+  set firewall.@redirect[-1].name='Web'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='5000'
   set firewall.@redirect[-1].dest_ip='172.28.0.2'

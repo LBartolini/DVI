@@ -9,7 +9,7 @@ Make sure containers have access to the following commands: *ping*, *ip*
 
 ## Vulnerabilities
 
- - Web: XSS, RCE, ...
+ - Web: RCE (Reverse shell)
 
  - ScadaLTS: Privilege Escalation, RCE  (CVE-2022-41976, CVE-2023-33472 https://hev0x.github.io/posts/scadalts-cve-2023-33472/) 
 

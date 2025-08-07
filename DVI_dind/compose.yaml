@@ -955,8 +955,33 @@ services:
       fdt.maxload: 260     
 
 ###### DMZ (172.28.0.0/24)
-  dvwa:
-    image: vulnerables/web-dvwa
+  # dvwa:
+  #   image: vulnerables/web-dvwa
+  #   healthcheck:
+  #     test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 2
+  #     start_period: 10s
+  #   cap_add:
+  #     - NET_ADMIN
+  #   volumes:
+  #     - ./framework/initial_setup.sh:/initial_setup.sh
+  #   post_start:
+  #      - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+  #        environment:
+  #           - GATEWAY=172.28.0.1
+  #           - DNS=172.28.0.3
+  #           - DNS_BASE_SEARCH=campus-savona.local       
+  #   depends_on:
+  #     perimeter:
+  #       condition: service_healthy
+  #   networks:
+  #     n20_dmz:
+  #       ipv4_address: 172.28.0.2
+
+  web:
+    build: framework/web/password-updater
     healthcheck:
       test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
@@ -1071,7 +1096,7 @@ services:
     restart: unless-stopped
     entrypoint: "/sbin/init"
     ports:
-      - 5000:5000 # dvwa
+      - 5000:5000 # Web
       - 5001:5001 # scada
       - 5002:5002 # bpmn viewer
       - 5003:5003/tcp # Windows RDP

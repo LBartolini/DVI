@@ -3,7 +3,7 @@ services:
     image: docker:28.2-dind
     restart: unless-stopped
     ports:
-      - 5000:5000 # dvwa
+      - 5000:5000 # Web
       - 5001:5001 # scada
       - 5002:5002 # bpmn viewer
       - 5003:5003/tcp # Windows RDP

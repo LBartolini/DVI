@@ -1,0 +1,3 @@
+<FilesMatch "\.txt$">
+    Require all denied
+</FilesMatch>

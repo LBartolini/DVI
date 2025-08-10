@@ -1,4 +1,4 @@
-FROM debian:10.9 AS scadalts-source
+FROM debian:12-slim AS scadalts-source
 RUN apt-get update -qq && apt-get install -y git
 ARG SCADALTS_COMMIT=fbd5000e2c66b53c4dc3ff0463f12c468c964d36
 RUN git clone https://github.com/SCADA-LTS/Scada-LTS.git /usr/local/src/Scada-LTS
@@ -11,14 +11,14 @@ RUN \
 #
 # BUILD
 #
-FROM debian:10.9 AS build
+FROM debian:12-slim AS build
 WORKDIR /usr/local/src
 ## Install deps
 RUN apt-get update -qq && apt-get install -y \
   nodejs \
   npm \
   wget \
-  openjdk-11-jdk-headless
+  openjdk-17-jdk-headless
 ## ANT
 ARG ANT_VERSION=1.10.12
 RUN wget -O - https://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz | tar -xzf - \
@@ -38,7 +38,7 @@ RUN /opt/apache-ant/bin/ant -lib lib/ war
 #
 # RUN
 #
-FROM tomcat:9.0.46-jdk16-openjdk-slim-buster AS run
+FROM tomcat:9-jdk21-openjdk-bullseye AS run
 # Healthcheck
 RUN apt-get update -qq && apt-get install -y curl wait-for-it iputils-ping iproute2
 WORKDIR /usr/local/tomcat/

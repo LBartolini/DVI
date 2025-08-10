@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.19.3.1-6-buster-fat
+FROM openresty/openresty:1.21.4.1-4-bullseye-fat
 RUN opm get pintsized/lua-resty-http
 RUN apt-get update -qq && apt-get install -y findutils iputils-ping iproute2
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf

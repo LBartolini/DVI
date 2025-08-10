@@ -1,5 +1,5 @@
 FROM camunda/camunda-bpm-platform:tomcat-7.15.0 AS camunda
-FROM tomcat:9.0.46-jdk16-openjdk-slim-buster AS run
+FROM tomcat:9-jdk21-openjdk-bullseye AS run
 
 RUN apt-get update -qq && apt-get install -y curl wait-for-it iputils-ping iproute2
 

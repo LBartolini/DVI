@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Savona @ UniGE</title>
     <link rel="stylesheet" href="/static/base.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
             <img src="/static/logo_genova.png" alt="Logo">
+            <h3 style="padding-left: 10px;"> Campus Savona</h3>
         </div>
         <nav>
             <a href="/">Home</a>
             <a href="/services.php">Services</a>
-            <a href="/who.php">Who we are</a>
+            <a href="/about.php">About</a>
             <a href="/contacts.php">Contacts</a>
-            <a href="/private.php">Private</a>
+            <a href="/private.php" style="color: yellow;">Private</a>
         </nav>
     </header>
+    
+    <div class="body-text">
+        <h3>Private section for Students and Employees</h3>
+        <ul>
+            <li><a href="">Login (Work in Progress)</a></li>
+            <li><a href="/change.php">Change your password</a></li>
+            <li><a href="">Access FTP (Only from DMZ)</a></li>
+        </ul>
+    </div>
 
-    <h3>Private section for Students and Employees</h3>
-    <a href="/change.php">Change your password</a>
 </body>
+
 </html>
-
-
-

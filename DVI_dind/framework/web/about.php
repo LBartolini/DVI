@@ -22,7 +22,10 @@
     </header>
 
     <div class="body-text">
-        <h3>Services</h3>
+        <h3>About the research group</h3>
+        <p>The main area of research at <b>Campus Savona</b> is Cybersecurity. Our goal is making infrastructures and critical application more secure and resilient to cyber attacks.</p>
+        <p>We manage the network that handles the Energy Management System of the whole campus. Our technicians operate on every node from a Windows Machine in a subnetwork.</p>
+        <p>We applied many techniques to ensure that the system is secure to external attacks. One technique used is that of limiting the access to the backbone using a Firewall (only FTP is allowed to the backbone).</p>
     </div>
 </body>
 </html>

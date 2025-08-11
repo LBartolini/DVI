@@ -991,7 +991,7 @@ services:
   #       ipv4_address: 172.28.0.2
 
   web:
-    build: framework/web/password-updater
+    build: framework/web
     healthcheck:
       test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
       interval: 5s

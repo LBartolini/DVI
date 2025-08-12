@@ -52,6 +52,14 @@ If you want to extend the network adding a container make sure that these comman
 
 There is the possibility to pause and unpause all the containers. Use *make dvi-pause* to pause and *make dvi-unpause* to unpause. It is useful to pause instead of stop because the starting process might not be reliable. This way you can be sure that everything will continue working after pause/unpause.
 
+## Access the Simulation
+
+All the services are exposed via Docker port mapping. You can access them by simply using 127.0.0.1 or localhost.
+
+There are many services exposed, mainly for debugging/management purposes.
+
+The only service you are allowed to access to perform your attacks is the WWW Webserver at port 5000. All the attack steps are performed to/through it.
+
 ### Full list of Make commands
 
 Note that all commands starting with *dvi-* are executed inside Dind.

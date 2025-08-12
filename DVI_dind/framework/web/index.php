@@ -39,7 +39,7 @@
                 <a class="card" href="/news/energy.php">
                     <div class="card-content">
                         <h3>Energy Management System (EMS)</h3>
-                        <p>The EMS is an excellence work for the campus...</p>
+                        <p>The EMS is a great innovation for the Campus...</p>
                     </div>
                 </a>
             </div>

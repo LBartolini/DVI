@@ -42,6 +42,8 @@ If you want to extend the network adding a container make sure that these comman
 
 - *make dvi-build* (builds all the containers)
 
+- (For the first initialization) *make dvi-dovesnap-up* (starts the dovesnap services used for network simulation, give it some minutes before starting the entire infrastructure otherwise it is possible that nothing connects. After doing this you can skip this step for future startup. Repeat at each reboot)
+
 - *make dvi-start* (starts dovesnap service and all the containers), if for some reason this process is not able to start correctly all the infrastructure you should execute *make dvi-down* and then repeat *make dvi-start*
 
 - *make dvi-ps* (alias for docker compose ps inside dind), before starting to work on DVI we suggest to check with this command that every container is healthy. Even in this case some strange behaviours could arise, if so you can try to restart from scratch by *make rm* removing Dind

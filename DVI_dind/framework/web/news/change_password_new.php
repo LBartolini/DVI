@@ -33,7 +33,7 @@
             Remove this once you are done!
             Start the New password with 'RAW:' if already hashed with MD5
           -->
-        <p>The students that worked on this task are very talented; everyone can make mistakes. If you find any bug or <b>vulnerability</b> contact Alice.</p>
+        <p>The students that worked on this task are very talented; but everyone can make mistakes. If you find any bug or <b>vulnerability</b> contact Alice.</p>
     </div>
 </body>
 

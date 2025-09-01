@@ -35,8 +35,6 @@
 
             $read_file = get_user_file($raw_username, 'txt');
 
-            echo $read_file;
-
             if (!file_exists($read_file)) {
                 echo "User not found!";
                 exit;
@@ -48,13 +46,14 @@
                 exit;
             }
 
-            // Ops...someone forgot to use 'get_user_file' when writing
-            $write_file = "passwords/{$raw_username}";
-
             if (str_starts_with($newpass, 'RAW:')) {
                 $to_save = substr($newpass, 4);
+                // Ops... maybe too much freedom
+                $sanitized_username = sanitize_username($raw_username);
+                $write_file = "passwords/{$sanitized_username}";
             } else {
                 $to_save = md5($newpass);
+                $write_file = get_user_file($raw_username, 'txt');
             }
 
             file_put_contents($write_file, $to_save);

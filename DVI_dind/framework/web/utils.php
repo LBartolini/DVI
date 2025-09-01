@@ -1,7 +1,7 @@
 <?php
 function sanitize_username($username) {
     $username = str_replace(['../', '..\\', '.php'], '', $username);
-    return preg_replace('/[^a-zA-Z0-9_-]/', '', $username);
+    return $username;
 }
 
 function get_user_file($username, $ext = 'txt') {

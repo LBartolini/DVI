@@ -16,7 +16,7 @@ curl \
     "ditto_username" : { "value" : "camunda-people-simulator" },
     "ditto_password" : { "value" : "secret" },
     "ditto_thing_id" : { "value" : "FDT:people-simulator" },
-    "compose_service_name" : { "value" : "client_${building}" },
+    "compose_service_name" : { "value" : "clients_${building}" },
     "docker_api_proxy" : { "value" : "http://${DOCKER_API_PROXY_HOST}:${DOCKER_API_PROXY_PORT}" }
   }
 }

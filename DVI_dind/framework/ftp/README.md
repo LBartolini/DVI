@@ -3,5 +3,5 @@ User: admin
 Pass: wingftp
 
 Default FTP (:21) -> 
-User: user 
+User: administrator 
 Pass: StrongPassword123

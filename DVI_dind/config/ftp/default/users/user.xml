@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <USER_ACCOUNTS Description="Wing FTP Server User Accounts">
     <USER>
-        <UserName>user</UserName>
+        <UserName>administrator</UserName>
         <EnableAccount>1</EnableAccount>
         <EnablePassword>1</EnablePassword>
         <Password>24f68bcfb24acc1d549ba8932b4f5f5ff5c5e2329599e2cff535ceed19bccdb7</Password>

@@ -8,9 +8,7 @@ This project realizes a Damn Vulnerable Infrastructure with many vulnerable cont
 
 The system implements the Energy Management System (EMS) of Campus Savona at Università di Genova. For the full description refer to the [GUIDE.md](./GUIDE.md).
 
-The attacker will get in the system through the web server. Exploring the website will give the user the ability to gain open source intelligence about the infrastructure, some hints about the network layout, some of the key nodes and some tips that might be useful for later attack steps.
-
-The whole system runs inside a Docker-in-Docker container (dind). It is possible to run it directly on the host by simply executing the compose file inside the directory DVI_dind.
+The whole system runs inside a Docker-in-Docker container (dind). Otherwise, if you prefer to do so, it is possible to run it directly on the host by simply executing the compose file inside the directory DVI_dind.
 
 This project is a perfect cyber range for penetration testers and students. It gives the attacker the ability to perform various types of attack, but most importantly it requires several lateral movements to reach the end goal.
 
@@ -20,21 +18,15 @@ The Guide can be helpful if you want a hint on how to start tackling this scenar
 
 ## Full Guide and Solutions
 
-Available at [GUIDE.md](./GUIDE.md)
+Available at [GUIDE.md](./GUIDE.md).
 
 ## Requirements
 
 Makefile is used to perform all actions on the system.
 
-Docker and Docker Compose version >=2.30.0 are required.
-
-### Specific requirements of containers
-
-Containers must have access to the following commands: *ping*, *ip*. This is to perform healthchecks and setup each container during startup.
+Docker and Docker Compose version >=2.30.0 are also required.
 
 The Windows container requires internet access to download the ISO. Remember to let it connect to internet without limiting the firewalls.
-
-If you want to extend the network adding a container make sure that these commands are available. Instructions to extend the infrastructure are given below.
 
 ## Steps to run
 
@@ -95,5 +87,9 @@ Note that all commands starting with *dvi-* are executed inside Dind.
 
 ## Instructions to extend
 
-TODO
+### Specific requirements for containers inside DVI
+
+Containers must have access to the following commands: *ping*, *ip*. This is to perform healthchecks and setup each container during startup.
+
+If you want to extend the network adding a container make sure that these commands are available.
 

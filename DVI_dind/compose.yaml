@@ -338,7 +338,7 @@ services:
         ipv4_address: 172.60.0.12
 
   windows:
-    image: dockurr/windows
+    image: dockurr/windows # RDP -> Username: Docker, Password: admin
     depends_on:
       enterprise:
         condition: service_healthy 

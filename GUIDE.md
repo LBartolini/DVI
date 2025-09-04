@@ -8,9 +8,15 @@ This section explains how to start you campaign against DVI. It will also show t
 
 Choose the Difficulty for your campaign against DVI. Inside, you will find all the information you are given to start. Choosing harder difficulties means you will receive less information compared to easier ones. 
 
+The objectives to achieve are multiple, note that for harder difficulties you will not receive specific goals; you and your imagination are free to do what you want, from data exfiltration to denial of service and many more. Try to act and behave like a real hacker and find interesting goals to reach. if you choose easier difficulties you will receive some initial hints and suggestions.
+
 Note: all the useful information are also accessible inside DVI! This is just for convenience and to facilitate the users. Also here you will find some guidelines and possible objectives to reach.
 
 We suggest that you to start from the hardest difficulty, Impossible, and only look at easier ones if you are not able to continue.
+
+All the information given for harder difficulties also apply for easier ones. This means that if you plan to play in Easy you have to read Impossible, Hard, Medium and finally Easy. Every level adds some more information to levels above.
+
+After choosing the difficulty, please read the next section regarding the Rules.
 
 #### Difficulties:
 
@@ -29,37 +35,61 @@ We suggest that you to start from the hardest difficulty, Impossible, and only l
 
 - <details>
   <summary>HARD</summary>
-  Network Scheme:
 
   ![](./_readme_images/network_hard.png)
+
+  The Network Scheme shows the Perimeter Router. You already know that there is a service at port 5000. That service is the Campus Website. It hosts some services for students as well as news and other useful information. 
+  
+  Looking at the schema there might be other servers inside the DMZ subnetwork and possibly also other subnetworks...
+
+  Your first objective is to gain as much knowledge of the system as possible. The end goal is still unknown, maybe you will find something useful in the website. Find your way into the system through it and continue your work inside.
 
 </details>
 
 - <details>
   <summary>MEDIUM</summary>
-  Network Scheme:
 
   ![](./_readme_images/network_medium.png)
+
+  Now you can take a look at the full DMZ subnetwork. You should check them for possible vulnerabilities or information on the network. Notice that there is a firewall next, if it is configured well it will be impossible to continue deeper, but what if it isn't...
+
+  Now you can see that there is another subnetwork with a Windows machine, a database and another interesting service...
+
+  Now that you have more to work with you can imagine your next moves. That database and Windows workstation surely hold confidential data, you should try to hack them. Also that other server might be crucial for future steps, explore the network and find what that server is.
+
+  Looking at the schema it seems that there might be more in the network...
 
 </details>
 
 - <details>
   <summary>EASY</summary>
-  Network Scheme:
 
   ![](./_readme_images/network_easy.png)
 
-  The attacker will get in the system through the web server. Exploring the website will give the user the ability to gain open source intelligence about the infrastructure, some hints about the network layout, some of the key nodes and some tips that might be useful for later attack steps.
+  The full network schema shows the three subnetworks. 
+  
+  The DMZ net with three services used for the initial phase of the attack. Exploiting the webserver is the first step of you campaign, it is the only service exposed to the internet. The next step is the FTP server, the Enterprise Firewall has a small misconfiguration that allows traffic from FTP.
+
+  Looking at the Enterprise Net, there are many objectives. The Windows Workstation can be a suitable end objective with the aim of stealing sensible information about the system. If instead you want to perform a more destructive attack you should investigate more the Scada and Ditto services and the ones linked to them. Also understanding how the BPMN service comes into play is crucial.
 
 </details>
 
 - <details>
   <summary>VERY EASY</summary>
-  Network Scheme:
 
   ![](./_readme_images/network_very_easy.png)
 
+  The schema here shows the individual IPs for all the important hosts and networks.
+
+  The following are the proposed objectives, solutions can be found in the Solutions section.
+
+  TODO
+
 </details>
+
+## Rules
+
+TODO
 
 ## Vulnerabilities
 
@@ -91,6 +121,8 @@ This section contains the credentials, the steps and other tips necessary to sol
 It shows possible goals/objectives with attack steps to reach them. Note that you can also come up with your own objectives.
 
 Open and read this only after trying to solve DVI yourself.
+
+TODO
 
 <details>
   <summary>Spoiler Alert</summary>

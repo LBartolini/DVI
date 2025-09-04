@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This project realizes a Damn Vulnerable Infrastructure with many vulnerable containers. It allows, and actually requires, the attacker to perform various lateral movements in order to reach its goal.
+This project realizes a Damn Vulnerable Infrastructure (DVI) with many vulnerable containers. It allows, and actually requires, the attacker to perform various lateral movements in order to reach its goal.
 
 The system implements the Energy Management System (EMS) of Campus Savona at Università di Genova. For the full description refer to the [GUIDE.md](./GUIDE.md).
 

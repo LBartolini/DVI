@@ -8,7 +8,7 @@ This section explains how to start you campaign against DVI. It will also show t
 
 Choose the Difficulty for your campaign against DVI. Inside, you will find all the information you are given to start. Choosing harder difficulties means you will receive less information compared to easier ones. 
 
-The objectives to achieve are multiple, note that for harder difficulties you will not receive specific goals; you and your imagination are free to do what you want, from data exfiltration to denial of service and many more. Try to act and behave like a real hacker and find interesting goals to reach. if you choose easier difficulties you will receive some initial hints and suggestions.
+The objectives to achieve are multiple, note that for harder difficulties you will not receive specific goals; you and your imagination are free to do what you want, from data exfiltration to denial of service and many more. Try to act and behave like a real hacker and find interesting goals to reach. If you choose easier difficulties you will receive some initial hints and suggestions.
 
 Note: all the useful information are also accessible inside DVI! This is just for convenience and to facilitate the users. Also here you will find some guidelines and possible objectives to reach.
 
@@ -16,7 +16,7 @@ We suggest that you to start from the hardest difficulty, Impossible, and only l
 
 All the information given for harder difficulties also apply for easier ones. This means that if you plan to play in Easy you have to read Impossible, Hard, Medium and finally Easy. Every level adds some more information to levels above.
 
-After choosing the difficulty, please read the next section regarding the Rules.
+After choosing the difficulty and reading all the information given to you, please remember to read the next section regarding the Rules.
 
 #### Difficulties:
 
@@ -72,6 +72,9 @@ After choosing the difficulty, please read the next section regarding the Rules.
 
   Looking at the Enterprise Net, there are many objectives. The Windows Workstation can be a suitable end objective with the aim of stealing sensible information about the system. If instead you want to perform a more destructive attack you should investigate more the Scada and Ditto services and the ones linked to them. Also understanding how the BPMN service comes into play is crucial.
 
+  The following is a brief description of the Energy Management System (EMS), it could be useful for your attacks:
+  The EMS is a complex procedure to manage the electricity being produced and consumed inside the campus. The consuming parts are the Campus Buildings, each with its own energy consumption based on how busy they are. The producing parts are the Solar Panels and the Gas Turbine Generator. In the middle there is the Battery that accumulates the energy.
+
 </details>
 
 - <details>
@@ -81,15 +84,79 @@ After choosing the difficulty, please read the next section regarding the Rules.
 
   The schema here shows the individual IPs for all the important hosts and networks.
 
-  The following are the proposed objectives, solutions can be found in the Solutions section.
+  Before talking about the suggested attacks, you will be given a brief explanation of the whole infrastructure, how it works, what each service does and how they are connected togheter.
 
-  TODO
+  The system is hosted inside the Campus Savona at Università di Genova. It is composed of three main subnetworks: the DMZ Net hosts services such as the Web server, the DNS and the FTP server; the Enterprise Net hosts the Workstation, used by the technical staff, and all the servers that handle the Energy Management System (EMS); finally, the Industrial Net is comprised of the field devices (Battery, Solar Panels and Generator) and the Campus Buildings PLCs handling the power consumption inside the campus.
+
+  The EMS is a complex procedure to manage the electricity being produced and consumed inside the campus. The consuming parts are the Campus Buildings, each with its own energy consumption based on how busy they are. The producing parts are the Solar Panels and the Gas Turbine Generator. In the middle there is the Battery that accumulates the energy.
+
+  All the decisions are made automatically by the BPMN service. It is started by another host (not directly shown in the Network Schema) that calls the BPMN server starting the procedure. This procedure can be viewed inside the BPMN viewer. It computes all the consumptions and decides if it is necessary to start the Gas Turbine or not, and decides if it is required to discharge the battery in case the energy produced by the Solar Panels is not enough. The BPMN procedure gets its source data from SCADA.
+
+  The communication is handled by the Message Broker DITTO; it gets datapoints from the field devices and acts as an aggregator for the SCADA server. DITTO is accessible through the DITTO Frontend that takes care of the credentials. 
+  Inside SCADA the technicians are able to manually start/stop the turbine, inspect all the consumptions and even switch off entire buildings inside the campus. The Enterprise DB is where SCADA stores all the data.
+
+  All the hosts inside the network use the internal DNS server.
+  
+
+  ### Attacks
+
+  Now you are ready to start your campaign inside DVI!
+
+  You already know that the first step of your attack is the Webserver that is accessible at port 5000 thanks to Port forwarding on the Perimeter Router. Inside that you will find many useful information, take your time to acquire as much knowledge as possible.
+
+  #### Webserver Takeover
+
+  To exploit it you have to look for a tool that allows you to execute commands directly on the machine. You could use it to send commands or even open a Reverse Shell. The vulnerable service writes files on the disk, you have to leverage this for your exploit. You should expect some level of defence, sanitization or firewall.
+
+  #### FTP Takeover
+
+  The next step is the FTP server. Be ready to acquire the version of that service and look for possible known vulnerabilities. Also you are required to solve a login to proceed forward.
+
+  These two steps are necessary for all further objectives. From now on you can do whatever you want. You could imagine an attack to the DNS, to the Windows machine stealing some fictitious data or some more critical attacks.
+
+  The following are the proposed final objectives (solutions to the first two steps and the following can be found in the Solutions section).
+
+  #### Data Exfiltration
+
+  In this scenario you have to exfiltrate sensitive data stored inside two possible hosts: the Enterprise Database and the Windows Workstation. This goal is considered to be completed if you manage to access and steal *some generic* data from either one of the two.
+
+  There is no *actual* sensitive data to target and try to steal but you can imagine for example a log file to be the file you are trying to exfiltrate.
+
+  #### Workstation Takeover
+
+  Your goal is to take control of the Windows Workstation. You are asked to scan the network, find the machine, exploit the Remote Desktop Protocol and execute some sort of command. This objective is considered to be completed if you are able to violate the machine and execute *some generic* command from terminal.
+
+  #### PLCs Takeover
+
+  This scenario demands you to take control of the PLCs exploiting some vulnerability present in the protocol used or leveraging default/insecure credentials. This objective is considered to be completed if you are able to show proof of an RCE inside a PLC of your choice.
+  
+  #### Infrastructure Takeover
+
+  This is the biggest and most complex proposed goal inside DVI.
+
+  You as the attacker are required to take control of the whole infrastructure. Your main objective is to disrupt the Energy Management System. Your final targets are a potential Blackout inside the University Campus by emptying the Battery; another target is the Explosion of the Gas Turbine if you can manage to keep it running indefinetly.
+
+  To reach these goals you have plenty of freedom. You could attack the SCADA service, you could perform a Man-in-the-Middle attack acting as the Message Broker DITTO, or lastly you could even violate the BPMN procedures.
 
 </details>
 
 ## Rules
 
-TODO
+This section contains the rules that you must follow inside DVI.
+
+ 1. You MUST access DVI through PORT 5000 only. All the other ports are to be used for Debug/Management tasks.
+
+ 2. You MUST NOT access any router/firewall interface, edit any of their configuration. Routers and Firewalls are OUT OF SCOPE for this scenario.
+
+ 3. You MUST NOT access the *docker_api_proxy* nor do anything through docker (like accessing specific containers, editing ip addresses, etc).
+
+ 4. You MUST NOT access the Windows machine through its VNC Web interface.
+
+ 5. You MUST NOT access the FTP Administration panel.
+
+ Remember that: What is not forbidden is permitted!
+
+ Good luck!
 
 ## Vulnerabilities
 
@@ -126,6 +193,22 @@ TODO
 
 <details>
   <summary>Spoiler Alert</summary>
+
+  Note: The first two are common for all the other attacks.
+
+  #### Webserver Takeover
+
+  #### FTP Takeover
+
+  ---
+
+  #### Data Exfiltration
+
+  #### Workstation Takeover
+
+  #### PLCs Takeover
+  
+  #### Infrastructure Takeover
 
 </details>
 

@@ -93,3 +93,7 @@ Containers must have access to the following commands: *ping*, *ip*. This is to 
 
 If you want to extend the network adding a container make sure that these commands are available.
 
+### Adding a new container in the system
+
+TODO
+

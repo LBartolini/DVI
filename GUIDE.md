@@ -158,6 +158,86 @@ This section contains the rules that you must follow inside DVI.
 
  Good luck!
 
+## Solutions
+
+This section contains the credentials, the steps and other tips necessary to solve the scenario.
+
+It shows possible goals/objectives with attack steps to reach them. Note that you can also come up with your own objectives.
+
+Open and read this only after trying to solve DVI yourself.
+
+<details>
+  <summary>Spoiler Alert</summary>
+
+  Note: The first two attacks are common for all the other attacks. All the end objectives require you to first violate the Webserver and then the FTP server. After that you will be able to 'bypass' the firewall leading into the Enterprise Net and the Industrial Net. This is because the firewall allows the FTP traffic to the internal networks. This means that your attack has to necessarily pass through the Webserver, then FTP and finally whichever internal host you want.
+
+  #### Webserver Takeover
+
+  The server contains many information about the system. Some are contained inside comments in the HTML. You can read them by inspecting the page.
+
+  The vulnerability lies in the Private section. The only service available is the 'Change your password' page. The users are stored directly inside the filesystem in the *passwords* directory. The *username.txt* is the filename while the password is hashed using MD5 and stored inside it. To exploit it you have to firstly find a correct username:password combination. That is achievable by using *alice* as the username (remember that Alice is found inside the website as the person to contact). The password is *abc123*, a simple password that is surely available in any wordlist.
+
+  Now comes the real exploit. The code that executes the password change is not completely secure. It sanitize the username in a naive way. It truncates the username to retrieve the current password, meaning that if you type *alice.whatever*, it just look for the user *alice*. But when it goes to write the new password it does not use the same sanitized variable; instead it just tries to remove *.php* from the string. The exploit is achieved by simply using the following username *alice.ph.phpp*. The final username used for writing will be *alice.php*. If you are able to write inside the file you can execute the code visiting */passwords/alice.php*.
+
+  Since new passwords are hashed this seems impossible. Fortunately "the students" who developed this functionality introduced a big security flaw; adding *RAW:* at the start of the new password allow you to bypass the hashing meaning that you can write whatever you want.
+
+  A possible exploit can be found at [Exploit](./DVI_dind/framework/web/README.md).
+
+
+  #### FTP Takeover
+
+  The FTP server offers the standard port 21 as well as a Web interface at port 80. This Web interface is vulnerable to Unauthenticated Remote Code Execution (RCE) during Login. 
+
+  The user is *administrator* with password *StrongPassword123*. This should not be necessary since the vulnerability does not require authentication.
+
+  Citing the Exploit: 
+  "Description: Wing FTP Server versions prior to 7.4.4 are vulnerable to an unauthenticated remote code execution (RCE) 
+  flaw (CVE-2025-47812). This vulnerability arises from improper handling of NULL bytes in the 'username'
+  parameter during login, leading to Lua code injection into session files. These maliciously crafted
+  session files are subsequently executed when authenticated functionalities (e.g., /dir.html) are accessed,
+  resulting in arbitrary command execution on the server with elevated privileges (root on Linux, SYSTEM on Windows).
+  The exploit leverages a discrepancy between the string processing in c_CheckUser() (which truncates at NULL)
+  and the session creation logic (which uses the full unsanitized username)."
+
+  The full exploit can be found at [Exploit](https://www.exploit-db.com/exploits/52347).
+
+  ---
+
+  Once you have gained access and full control of both the Web server and FTP server you are ready to proceed.
+
+  #### Data Exfiltration
+
+  To reach this goal you are required to steal some generic data/file from either the Enterprise Database or the Windows Workstation.
+
+  The former can be violated thanks to its vulnerability of Improper Authentication (CVE-2012-2122).
+
+  The latter can be exploited using a vulnerability in the Remote Desktop Protocol (RDP) that leads to an RCE (CVE-2019-0708).
+
+  #### Workstation Takeover
+
+  As per the goal above, you have to exploit the same vulnerability of Windows RDP (CVE-2019-0708).
+
+  #### PLCs Takeover
+
+  To gain control of the PLCs you have to exploit a Buffer Overflow vulnerability that can lead to an RCE.
+
+  More information can be found [here](https://talosintelligence.com/vulnerability_reports/TALOS-2024-2005) (CVE-2024-34026).
+  
+  #### Infrastructure Takeover
+
+  The full Infrastructure Takeover can be achieved in various different ways. What follows is just a suggestion but you can decide to try another approach if you prefer.
+
+  The attack is performed against the SCADA server running a vulnerable version of ScadaLTS. The vulnerability allows the attacker to perform an RCE (CVE-2023-33472). The exploit can be found [here](https://hev0x.github.io/posts/scadalts-cve-2023-33472/).
+  This exploit requires to know the credentials which are insecure; Username: *admin* and Password: *admin*.
+
+  After being able to take control over SCADA you are able to control everything inside the system. To try acting more like a real attacker you can try to be as stealth as possible, meaning that logging in and powering things off will not be considered completely correct.
+
+  To finish up the attack you can implement a Man-in-the-Middle attack where you act as the Message Broker DITTO. To do so you could poison the DNS records or add a specific rule inside SCADA pointing to your Fake DITTO server.
+  
+  You can send fictitious and malicious data to SCADA/BPMN letting them think that the field devices are in a different state w.r.t. the reality. You can also directly forge messages to field devices while blocking the real commands.
+
+</details>
+
 ## Vulnerabilities
 
 This section contains the full list of vulnerabilities present inside DVI. Some refer to a specific CVE code and a couple also contain a link to known exploits.
@@ -175,40 +255,9 @@ For the true experience with DVI, you are asked NOT to read this section. If you
 
  - Windows: RCE (CVE-2019-0708)
 
- - OpenPLC: RCE (CVE-2024-34026)
+ - OpenPLC: RCE (CVE-2024-34026 https://talosintelligence.com/vulnerability_reports/TALOS-2024-2005)
 
  - WingFTP: RCE (CVE-2025-47812 https://www.exploit-db.com/exploits/52347)
-
-</details>
-
-## Solutions
-
-This section contains the credentials, the steps and other tips necessary to solve the scenario.
-
-It shows possible goals/objectives with attack steps to reach them. Note that you can also come up with your own objectives.
-
-Open and read this only after trying to solve DVI yourself.
-
-TODO
-
-<details>
-  <summary>Spoiler Alert</summary>
-
-  Note: The first two are common for all the other attacks.
-
-  #### Webserver Takeover
-
-  #### FTP Takeover
-
-  ---
-
-  #### Data Exfiltration
-
-  #### Workstation Takeover
-
-  #### PLCs Takeover
-  
-  #### Infrastructure Takeover
 
 </details>
 
@@ -222,14 +271,15 @@ DO NOT refer, use or rely on ANY of the information written here for you campaig
   <summary>Spoiler Alert</summary>
   Services associated to Ports exposed:
 
-      - 5000:5000 # Web
-      - 5001:5001 # scada -> User: admin, Pass: admin
-      - 5002:5002 # bpmn viewer -> User: admin, Pass: admin
+      - 5000:5000 # Web -> (Credentials for 'Change your password') User: alice, Pass: abc123
+      - 5001:5001 # Scada -> User: admin, Pass: admin
+      - 5002:5002 # BPMN viewer -> User: admin, Pass: admin
       - 5003:5003/tcp # Windows RDP -> User: Docker, Pass: admin
       - 5003:5003/udp # Windows RDP
       - 5004:5004 # Windows VNC
-      - 5005:5005 # [Empty]
-      - 5006:5006 # FTP Admin 5466 -> User: admin Pass: wingftp
+      - 5005:5005 # Empty/Free
+      - 5006:5006 # FTP Admin Panel (Port 5466) -> User: admin, Pass: wingftp
+                  # FTP Default (Port 21, 80) -> User: administrator, Pass: StrongPassword123
       - 8081:8081 # LuCI perimeter -> No User/Pass required
       - 8082:8082 # LuCI enterprise -> No User/Pass required
       - 8083:8083 # LuCI industrial -> No User/Pass required

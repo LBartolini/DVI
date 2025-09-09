@@ -95,5 +95,39 @@ If you want to extend the network adding a container make sure that these comman
 
 ### Adding a new container in the system
 
-TODO
+Remember to place the actual ROUTER_IP in place of this placeholder.
+Also look carefully at the other IPs: DNS and IP address for the container.
 
+```yaml
+ web:
+    build: framework/web # point to your build or use the image tag below
+    #image: myImage
+    healthcheck: # This whole section is necessary, do not remove!
+      test: test -e /.setup_correctly && (ping -c 5 ROUTER_IP > /dev/null 2>&1 || exit 1) # Place the actual ROUTER_IP
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    cap_add:
+      - NET_ADMIN # This is necessary, do not remove!
+    volumes:
+      - ./framework/initial_setup.sh:/initial_setup.sh # This is necessary, do not remove!
+    post_start: # This whole section is necessary, do not remove!
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
+         environment:
+            - GATEWAY=ROUTER_IP # Place the actual ROUTER_IP
+            - DNS=172.28.0.3 # If you change the DNS IP remember to edit this line
+            - DNS_BASE_SEARCH=campus-savona.local # Same as above. Leave like this, edit only if you change configuration in DNS
+    depends_on:
+      perimeter: # Put the container name of the router to which it is connected
+        condition: service_healthy # always put service_healty
+        # Note: you are free to add also other dependencies as you wish. Be careful not to create dependency loops
+    networks:
+      n20_dmz: # Name of the Subnetwork to which it is connected
+        ipv4_address: 172.28.0.2 # Put the IP address for this container
+```
+
+### Other
+
+Since this framework uses actual routers you are required to configure them carefully. Starting from firewall rules, port forwarding and static routes.
+You can take a look at the configuration files in *./DVI_dind/config/router*. The config files use a *.sh* script that configures the system via the *uci* CLI for the router.

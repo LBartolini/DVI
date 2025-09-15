@@ -21,7 +21,7 @@ After choosing the difficulty and reading all the information given to you, plea
 #### Difficulties:
 
 - <details>
-  <summary>IMPOSSIBLE</summary>
+  <summary>VERY HARD</summary>
   
   Network Scheme: None
 

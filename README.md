@@ -6,7 +6,7 @@
 
 This project realizes a Damn Vulnerable Infrastructure (DVI) with many vulnerable containers. It allows, and actually requires, the attacker to perform various lateral movements in order to reach its goal.
 
-The system implements the Energy Management System (EMS) of Campus Savona at Università di Genova. For the full description refer to the [GUIDE.md](./GUIDE.md).
+The system implements the Energy Management System (EMS) of Campus DVI at DamnVulnerable University. For the full description refer to the [GUIDE.md](./GUIDE.md).
 
 The whole system runs inside a Docker-in-Docker container (dind). Otherwise, if you prefer to do so, it is possible to run it directly on the host by simply executing the compose file inside the directory DVI_dind.
 
@@ -131,3 +131,7 @@ Also look carefully at the other IPs: DNS and IP address for the container.
 
 Since this framework uses actual routers you are required to configure them carefully. Starting from firewall rules, port forwarding and static routes.
 You can take a look at the configuration files in *./DVI_dind/config/router*. The config files use a *.sh* script that configures the system via the *uci* CLI for the router.
+
+## Acknowledgements
+
+This project heavily relies and extends [Lidite](https://github.com/CSecLab/LiDiTE), project developed by Università di Genova and Scuola IMT di Lucca.

@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Savona @ UniGE</title>
+    <title>Campus DVI @ UniDV</title>
     <link rel="stylesheet" href="/static/base.css">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <img src="/static/logo_genova.png" alt="Logo">
-            <h3 style="padding-left: 10px;"> Campus Savona</h3>
+            <img src="/static/logo_unidv.png" alt="Logo">
+            <h3 style="padding-left: 10px;"> Campus DVI</h3>
         </div>
         <nav>
             <a href="/">Home</a>
@@ -25,7 +25,7 @@
     <div class="body-text">
         <h3>Energy Management System (EMS)</h3>
         <p>At the core of the EMS is the Smart Polygeneration Microgrid (SPM).</p>
-        <p>The SPM is a power generation plant deployed within the Campus Savona @ UniGE. 
+        <p>The SPM is a power generation plant deployed within the Campus DVI @ UniDV. 
             The campus hosts a number of facilities for university students and staff, including a gym and a tennis court. 
             Classrooms, laboratories, and offices are located inside five buildings. 
             Moreover, a sixth building contains the library and some study rooms.</p>

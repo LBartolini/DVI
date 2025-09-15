@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Savona @ UniGE</title>
+    <title>Campus DVI @ UniDV</title>
     <link rel="stylesheet" href="/static/base.css">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <img src="/static/logo_genova.png" alt="Logo">
-            <h3 style="padding-left: 10px;"> Campus Savona</h3>
+            <img src="/static/logo_unidv.png" alt="Logo">
+            <h3 style="padding-left: 10px;"> Campus DVI</h3>
         </div>
         <nav>
             <a href="/">Home</a>

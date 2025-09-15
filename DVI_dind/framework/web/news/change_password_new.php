@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Savona @ UniGE</title>
+    <title>Campus DVI @ UniDV</title>
     <link rel="stylesheet" href="/static/base.css">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <img src="/static/logo_genova.png" alt="Logo">
-            <h3 style="padding-left: 10px;"> Campus Savona</h3>
+            <img src="/static/logo_unidv.png" alt="Logo">
+            <h3 style="padding-left: 10px;"> Campus DVI</h3>
         </div>
         <nav>
             <a href="/">Home</a>
@@ -23,8 +23,8 @@
         </nav>
     </header>
     <div class="body-text">
-        <h3>A new service for Students and Eployees at Campus Savona</h3>
-        <p>The students of UniGE have developed this incredible functionality inside this website. 
+        <h3>A new service for Students and Eployees at Campus DVI</h3>
+        <p>The students of UniDV have developed this incredible functionality inside this website. 
             They developed the <b>Change your password</b> service inside the Private section.</p>
         <p>The password is stored using the MD5 hash inside a file. Each user has its own file inside the <b>/passwords</b> directory. Of course accessing <b>.txt</b> files inside is forbidden!</p>
         <p>Since many applications, linked to this one, already provide hashed passwords, the students have thought about a way of excluding the hashing process!</p>

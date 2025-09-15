@@ -86,7 +86,7 @@ After choosing the difficulty and reading all the information given to you, plea
 
   Before talking about the suggested attacks, you will be given a brief explanation of the whole infrastructure, how it works, what each service does and how they are connected togheter.
 
-  The system is hosted inside the Campus Savona at Università di Genova. It is composed of three main subnetworks: the DMZ Net hosts services such as the Web server, the DNS and the FTP server; the Enterprise Net hosts the Workstation, used by the technical staff, and all the servers that handle the Energy Management System (EMS); finally, the Industrial Net is comprised of the field devices (Battery, Solar Panels and Generator) and the Campus Buildings PLCs handling the power consumption inside the campus.
+  The system is hosted inside the Campus DVI at DamnVulnerable University. It is composed of three main subnetworks: the DMZ Net hosts services such as the Web server, the DNS and the FTP server; the Enterprise Net hosts the Workstation, used by the technical staff, and all the servers that handle the Energy Management System (EMS); finally, the Industrial Net is comprised of the field devices (Battery, Solar Panels and Generator) and the Campus Buildings PLCs handling the power consumption inside the campus.
 
   The EMS is a complex procedure to manage the electricity being produced and consumed inside the campus. The consuming parts are the Campus Buildings, each with its own energy consumption based on how busy they are. The producing parts are the Solar Panels and the Gas Turbine Generator. In the middle there is the Battery that accumulates the energy.
 
@@ -148,7 +148,7 @@ This section contains the rules that you must follow inside DVI.
 
  2. You MUST NOT access any router/firewall interface, edit any of their configuration. Routers and Firewalls are OUT OF SCOPE for this scenario.
 
- 3. You MUST NOT access the *docker_api_proxy* nor do anything through docker (like accessing specific containers, editing ip addresses, etc).
+ 3. You MUST NOT access any container through docker (like accessing specific containers, editing ip addresses, etc).
 
  4. You MUST NOT access the Windows machine through its VNC Web interface.
 

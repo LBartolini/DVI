@@ -280,9 +280,9 @@ DO NOT refer, use or rely on ANY of the information written here for you campaig
       - 5005:5005 # Empty/Free
       - 5006:5006 # FTP Admin Panel (Port 5466) -> User: admin, Pass: wingftp
                   # FTP Default (Port 21, 80) -> User: administrator, Pass: StrongPassword123
-      - 8081:8081 # LuCI perimeter -> No User/Pass required
-      - 8082:8082 # LuCI enterprise -> No User/Pass required
-      - 8083:8083 # LuCI industrial -> No User/Pass required
+      - 8081:8081 # LuCI perimeter -> User: root, Pass: not required
+      - 8082:8082 # LuCI enterprise -> User: root, Pass: not required
+      - 8083:8083 # LuCI industrial -> User: root, Pass: not required
 
   All these services, apart from Web at port 5000, are NOT TO BE USED during your activities inside DVI.
 

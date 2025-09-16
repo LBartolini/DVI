@@ -148,7 +148,7 @@ This section contains the rules that you must follow inside DVI.
 
  2. You MUST NOT access any router/firewall interface, edit any of their configuration. Routers and Firewalls are OUT OF SCOPE for this scenario.
 
- 3. You MUST NOT access any container through docker (like accessing specific containers, editing ip addresses, etc).
+ 3. You MUST NOT access the *docker_api_proxy* service nor any other container through docker nor doing anything directly inside *dind* (like accessing specific containers, editing ip addresses, etc).
 
  4. You MUST NOT access the Windows machine through its VNC Web interface.
 

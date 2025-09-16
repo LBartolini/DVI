@@ -155,8 +155,8 @@ services:
       - SCADA_PORT=8080
       - DITTO_HOST=ditto-frontend
       - DITTO_PORT=80
-      #- DOCKER_API_PROXY_HOST=docker_api_proxy
-      #- DOCKER_API_PROXY_PORT=1337
+      - DOCKER_API_PROXY_HOST=docker_api_proxy
+      - DOCKER_API_PROXY_PORT=1337
       - CRON_DIR=/usr/share/camunda/cronjobs
       - INTERVAL_SECONDS=10s
     volumes:
@@ -602,17 +602,17 @@ services:
       n60_industrial:
         ipv4_address: 172.90.0.13
 
-  # clients_biblioteca:
-  #   build: framework/nothing
-  #   depends_on:
-  #     industrial:
-  #       condition: service_healthy    
-  #   scale: 1
-  #   network_mode: none
-  #   labels:
-  #     fdt.cabinetID: biblioteca
-  #     fdt.minload: 240
-  #     fdt.maxload: 260
+  clients_biblioteca:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: biblioteca
+      fdt.minload: 240
+      fdt.maxload: 260
 
   cabinet_delfino:
     build: framework/cabinet
@@ -672,17 +672,17 @@ services:
       n60_industrial:
         ipv4_address: 172.90.0.14
 
-  # clients_delfino:
-  #   build: framework/nothing
-  #   depends_on:
-  #     industrial:
-  #       condition: service_healthy    
-  #   scale: 1
-  #   network_mode: none
-  #   labels:
-  #     fdt.cabinetID: delfino
-  #     fdt.minload: 240
-  #     fdt.maxload: 260 
+  clients_delfino:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: delfino
+      fdt.minload: 240
+      fdt.maxload: 260 
 
   cabinet_lagorio:
     build: framework/cabinet
@@ -742,17 +742,17 @@ services:
       n60_industrial:
         ipv4_address: 172.90.0.15
 
-  # clients_lagorio:
-  #   build: framework/nothing
-  #   depends_on:
-  #     industrial:
-  #       condition: service_healthy    
-  #   scale: 1
-  #   network_mode: none
-  #   labels:
-  #     fdt.cabinetID: lagorio
-  #     fdt.minload: 240
-  #     fdt.maxload: 260
+  clients_lagorio:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: lagorio
+      fdt.minload: 240
+      fdt.maxload: 260
 
   cabinet_marchi:
     build: framework/cabinet
@@ -812,17 +812,17 @@ services:
       n60_industrial:
         ipv4_address: 172.90.0.16
 
-  # clients_marchi:
-  #   build: framework/nothing
-  #   depends_on:
-  #     industrial:
-  #       condition: service_healthy    
-  #   scale: 1
-  #   network_mode: none
-  #   labels:
-  #     fdt.cabinetID: marchi
-  #     fdt.minload: 240
-  #     fdt.maxload: 260  
+  clients_marchi:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: marchi
+      fdt.minload: 240
+      fdt.maxload: 260  
 
   cabinet_locatelli:
     build: framework/cabinet
@@ -882,17 +882,17 @@ services:
       n60_industrial:
         ipv4_address: 172.90.0.17
 
-  # clients_locatelli:
-  #   build: framework/nothing
-  #   depends_on:
-  #     industrial:
-  #       condition: service_healthy    
-  #   scale: 1
-  #   network_mode: none
-  #   labels:
-  #     fdt.cabinetID: locatelli
-  #     fdt.minload: 240
-  #     fdt.maxload: 260  
+  clients_locatelli:
+    build: framework/nothing
+    depends_on:
+      industrial:
+        condition: service_healthy    
+    scale: 1
+    network_mode: none
+    labels:
+      fdt.cabinetID: locatelli
+      fdt.minload: 240
+      fdt.maxload: 260  
 
   cabinet_seb:
     build: framework/cabinet
@@ -1044,31 +1044,31 @@ services:
       n20_dmz:
         ipv4_address: 172.28.0.3
 
-  # docker_api_proxy:
-  #   build: framework/docker-api-proxy
-  #   healthcheck:
-  #     test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 2
-  #     start_period: 10s
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./framework/initial_setup.sh:/initial_setup.sh
-  #   cap_add:
-  #     - NET_ADMIN      
-  #   post_start:
-  #      - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"     
-  #        environment:
-  #           - GATEWAY=172.28.0.1
-  #           - DNS=172.28.0.3
-  #           - DNS_BASE_SEARCH=campus-savona.local        
-  #   depends_on:
-  #     perimeter:
-  #       condition: service_healthy
-  #   networks:
-  #     n20_dmz:
-  #       ipv4_address: 172.28.0.4 
+  docker_api_proxy:
+    build: framework/docker-api-proxy
+    healthcheck:
+      test: test -e /.setup_correctly && (ping -c 5 172.28.0.1 > /dev/null 2>&1 || exit 1)
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./framework/initial_setup.sh:/initial_setup.sh
+    cap_add:
+      - NET_ADMIN      
+    post_start:
+       - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"     
+         environment:
+            - GATEWAY=172.28.0.1
+            - DNS=172.28.0.3
+            - DNS_BASE_SEARCH=campus-savona.local        
+    depends_on:
+      perimeter:
+        condition: service_healthy
+    networks:
+      n20_dmz:
+        ipv4_address: 172.28.0.4 
 
   ftp:
     build: framework/ftp

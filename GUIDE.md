@@ -175,9 +175,11 @@ Open and read this only after trying to solve DVI yourself.
 
   The server contains many information about the system. Some are contained inside comments in the HTML. You can read them by inspecting the page.
 
-  The vulnerability lies in the Private section. The only service available is the 'Change your password' page. The users are stored directly inside the filesystem in the *passwords* directory. The *username.txt* is the filename while the password is hashed using MD5 and stored inside it. To exploit it you have to firstly find a correct username:password combination. That is achievable by using *alice* as the username (remember that Alice is found inside the website as the person to contact). The password is *abc123*, a simple password that is surely available in any wordlist.
-
-  Now comes the real exploit. The code that executes the password change is not completely secure. It sanitize the username in a naive way. It truncates the username to retrieve the current password, meaning that if you type *alice.whatever*, it just look for the user *alice*. But when it goes to write the new password it does not use the same sanitized variable; instead it just tries to remove *.php* from the string. The exploit is achieved by simply using the following username *alice.ph.phpp*. The final username used for writing will be *alice.php*. If you are able to write inside the file you can execute the code visiting */passwords/alice.php*.
+  The vulnerability lies inside the administration section, */admin*. The only service available is the 'Change your password' page at */admin/change.php*. The users are stored directly inside the filesystem in the */passwords* directory. The *username* is the filename while the password is hashed using MD5 and stored inside it. 
+  
+  To exploit it you just have to find understand how the sanitization works. In fact the code that executes the password change is not completely secure. It sanitize the username in a naive way. When it writes the new password it just tries to remove *.php* from the string. 
+  
+  The exploit is achieved by simply using the following username *alice.williams@unidv.it.ph.phpp*. The final username used for writing will be *alice.williams@unidv.it.php*. If you are able to write inside the file you can execute the code visiting */passwords/alice.williams@unidv.it.php*.
 
   Since new passwords are hashed this seems impossible. Fortunately "the students" who developed this functionality introduced a big security flaw; adding *RAW:* at the start of the new password allow you to bypass the hashing meaning that you can write whatever you want.
 
@@ -271,7 +273,7 @@ DO NOT refer, use or rely on ANY of the information written here for you campaig
   <summary>Spoiler Alert</summary>
   Services associated to Ports exposed:
 
-      - 5000:5000 # Web -> (Credentials for 'Change your password') User: alice, Pass: abc123
+      - 5000:5000 # Web
       - 5001:5001 # Scada -> User: admin, Pass: admin
       - 5002:5002 # BPMN viewer -> User: admin, Pass: admin
       - 5003:5003/tcp # Windows RDP -> User: Docker, Pass: admin
@@ -287,4 +289,5 @@ DO NOT refer, use or rely on ANY of the information written here for you campaig
   All these services, apart from Web at port 5000, are NOT TO BE USED during your activities inside DVI.
 
   BUT, if you want to check at those before/after/during your campaing, you can do this accessing *localhost:PORT*.
+
 </details>

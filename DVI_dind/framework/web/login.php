@@ -24,11 +24,8 @@
     </header>
     
     <div class="body-text">
-        <h3>Private section for Students and Employees</h3>
-        <ul>
-            <li><a href="/login.php">Login (Work in Progress!)</a></li><br>
-            <li><a href="http://ftp.campus-savona.local">Access FTP (Only from DMZ)</a></li><br>
-        </ul>
+        <h3>Login</h3>
+        <h3>WORK IN PROGRESS! Nothing here...</h3>
     </div>
 
 </body>

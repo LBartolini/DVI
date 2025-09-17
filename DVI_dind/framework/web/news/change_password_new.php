@@ -25,15 +25,14 @@
     <div class="body-text">
         <h3>A new service for Students and Eployees at Campus DVI</h3>
         <p>The students of UniDV have developed this incredible functionality inside this website. 
-            They developed the <b>Change your password</b> service inside the Private section.</p>
-        <p>The password is stored using the MD5 hash inside a file. Each user has its own file inside the <b>/passwords</b> directory. Of course accessing <b>.txt</b> files inside is forbidden!</p>
-        <p>Since many applications, linked to this one, already provide hashed passwords, the students have thought about a way of excluding the hashing process!</p>
+            They developed the <b>Change your password</b> service that is accessible only through your <b>admin</b> panel.</p>
+        <p>The password is stored using the MD5 hash inside a file. Each user has its own file inside the <b>/passwords</b> directory.</p>
+        <p>The students have also thought about a way of excluding the hashing process!</p>
         <!-- 
-            TODO: 
-            Remove this once you are done!
-            Start the New password with 'RAW:' if already hashed with MD5
+            TODO: Remove this comment, critical vulnerability here!
+            Start the New password with 'RAW:' to bypass hashing
           -->
-        <p>The students that worked on this task are very talented; but everyone can make mistakes. If you find any bug or <b>vulnerability</b> contact Alice.</p>
+        <p>The students that worked on this task are very talented; but everyone can make mistakes. If you find any bug or <b>vulnerability</b> contact Alice at <b>alice.williams@unidv.it</b>.</p>
     </div>
 </body>
 

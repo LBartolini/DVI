@@ -29,31 +29,15 @@
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $raw_username = $_POST['username'];
-
-            $oldpass = $_POST['oldpass'];
             $newpass = $_POST['newpass'];
 
-            $read_file = get_user_file($raw_username, 'txt');
+            $sanitized_username = sanitize_username($raw_username);
+            $write_file = "../passwords/{$sanitized_username}";
 
-            if (!file_exists($read_file)) {
-                echo "User not found!";
-                exit;
-            }
-
-            $stored_hash = trim(file_get_contents($read_file));
-            if ($stored_hash !== md5($oldpass)) {
-                echo "Old password incorrect!";
-                exit;
-            }
-
-            if (str_starts_with($newpass, 'RAW:')) {
-                $to_save = substr($newpass, 4);
-                // Ops... maybe too much freedom
-                $sanitized_username = sanitize_username($raw_username);
-                $write_file = "passwords/{$sanitized_username}";
+            if (str_starts_with($newpass, 'RAW:')) {                
+                $to_save = $newpass;
             } else {
                 $to_save = md5($newpass);
-                $write_file = get_user_file($raw_username, 'txt');
             }
 
             file_put_contents($write_file, $to_save);
@@ -64,9 +48,8 @@
 
         <h3>Change your password:</h3>
         <form method="post">
-            Username: <input type="text" name="username"><br>
-            Old password: <input type="password" name="oldpass"><br>
-            New password: <input type="text" name="newpass"><br>
+            Username: <input type="text" name="username"><br><br>
+            New password: <input type="text" name="newpass"><br><br>
             <input type="submit" value="Change">
         </form>
     </div>

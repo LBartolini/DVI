@@ -26,7 +26,7 @@ uci -q batch <<-EOF >/dev/null
   set network.per2ent=interface
   set network.per2ent.proto=static
   set network.per2ent.ifname=eth2
-  set network.per2ent.ipaddr='172.50.0.1'
+  set network.per2ent.ipaddr='172.28.50.1'
   set network.per2ent.netmask='255.255.255.0'
 
   set network.loopback.ipaddr='127.0.0.1'
@@ -36,23 +36,23 @@ uci -q batch <<-EOF >/dev/null
   # enterprise
   add network route 
   set network.@route[-1].interface=per2ent
-  set network.@route[-1].target='172.60.0.0'
+  set network.@route[-1].target='172.28.60.0'
   set network.@route[-1].netmask='255.255.255.0'
-  set network.@route[-1].gateway='172.50.0.2'
+  set network.@route[-1].gateway='172.28.50.2'
 
   add network route
   # ent2ind
   set network.@route[-1].interface=per2ent
-  set network.@route[-1].target='172.80.0.0' 
+  set network.@route[-1].target='172.28.80.0' 
   set network.@route[-1].netmask='255.255.255.0'
-  set network.@route[-1].gateway='172.50.0.2'
+  set network.@route[-1].gateway='172.28.50.2'
 
   add network route
   # industrial
   set network.@route[-1].interface=per2ent
-  set network.@route[-1].target='172.90.0.0' 
+  set network.@route[-1].target='172.28.90.0' 
   set network.@route[-1].netmask='255.255.255.0'
-  set network.@route[-1].gateway='172.50.0.2'
+  set network.@route[-1].gateway='172.28.50.2'
 
   commit network
 
@@ -140,7 +140,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='Scada'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='5001'
-  set firewall.@redirect[-1].dest_ip='172.60.0.4'
+  set firewall.@redirect[-1].dest_ip='172.28.60.4'
   set firewall.@redirect[-1].dest_port='8080'
 
   # Port forwarding to BPMN Viewer
@@ -149,7 +149,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='BPMN Viewer'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='5002'
-  set firewall.@redirect[-1].dest_ip='172.60.0.8'
+  set firewall.@redirect[-1].dest_ip='172.28.60.8'
   set firewall.@redirect[-1].dest_port='80'
 
   # Port forwarding to Windows RDP
@@ -158,7 +158,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='Windows RDP'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='5003'
-  set firewall.@redirect[-1].dest_ip='172.60.0.13'
+  set firewall.@redirect[-1].dest_ip='172.28.60.13'
   set firewall.@redirect[-1].dest_port='3389'
 
   # Port forwarding to Windows VNC
@@ -167,7 +167,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='Windows VNC'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='5004'
-  set firewall.@redirect[-1].dest_ip='172.60.0.13'
+  set firewall.@redirect[-1].dest_ip='172.28.60.13'
   set firewall.@redirect[-1].dest_port='8006'
 
   # Port forwarding to FTP (80)
@@ -194,7 +194,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='Enterprise LuCI'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='8082'
-  set firewall.@redirect[-1].dest_ip='172.50.0.2'
+  set firewall.@redirect[-1].dest_ip='172.28.50.2'
   set firewall.@redirect[-1].dest_port='80'
 
   # Port forwarding to Industrial LuCI
@@ -203,7 +203,7 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@redirect[-1].name='Industrial LuCI'
   set firewall.@redirect[-1].src='internet'
   set firewall.@redirect[-1].src_dport='8083'
-  set firewall.@redirect[-1].dest_ip='172.80.0.2'
+  set firewall.@redirect[-1].dest_ip='172.28.80.2'
   set firewall.@redirect[-1].dest_port='80'
 
   commit firewall

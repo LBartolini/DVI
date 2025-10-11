@@ -11,22 +11,22 @@ uci -q batch <<-EOF >/dev/null
   set network.per2ent=interface
   set network.per2ent.proto=static
   set network.per2ent.ifname=eth0
-  set network.per2ent.ipaddr='172.50.0.2'
-  set network.per2ent.gateway='172.50.0.1'
+  set network.per2ent.ipaddr='172.28.50.2'
+  set network.per2ent.gateway='172.28.50.1'
   set network.per2ent.netmask='255.255.255.0'
 
   # enterprise interface
   set network.enterprise=interface
   set network.enterprise.proto=static
   set network.enterprise.ifname=eth1
-  set network.enterprise.ipaddr='172.60.0.1'
+  set network.enterprise.ipaddr='172.28.60.1'
   set network.enterprise.netmask='255.255.255.0'
 
   # ent2ind interface
   set network.ent2ind=interface
   set network.ent2ind.proto=static
   set network.ent2ind.ifname=eth2
-  set network.ent2ind.ipaddr='172.80.0.1'
+  set network.ent2ind.ipaddr='172.28.80.1'
   set network.ent2ind.netmask='255.255.255.0'
 
   set network.loopback.ipaddr='127.0.0.1'
@@ -36,9 +36,9 @@ uci -q batch <<-EOF >/dev/null
   # Industrial
   add network route
   set network.@route[-1].interface=ent2ind
-  set network.@route[-1].target='172.90.0.0' 
+  set network.@route[-1].target='172.28.90.0' 
   set network.@route[-1].netmask='255.255.255.0'
-  set network.@route[-1].gateway='172.80.0.2'
+  set network.@route[-1].gateway='172.28.80.2'
 
   commit network
 

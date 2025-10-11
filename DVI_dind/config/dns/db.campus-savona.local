@@ -10,21 +10,21 @@ ftp                   IN      A     172.28.0.5
 bind9                 IN      CNAME ns
 www                   IN      CNAME @
 
-enterprise-db         IN      A     172.60.0.3
-scada                 IN      A     172.60.0.4
-camunda               IN      A     172.60.0.5
-bpmn-viewer           IN      A     172.60.0.8
-ditto-db              IN      A     172.60.0.9
-ditto                 IN      A     172.60.0.11
-ditto-frontend        IN      A     172.60.0.12
-frontend              IN      A     172.60.0.12
+enterprise-db         IN      A     172.28.60.3
+scada                 IN      A     172.28.60.4
+camunda               IN      A     172.28.60.5
+bpmn-viewer           IN      A     172.28.60.8
+ditto-db              IN      A     172.28.60.9
+ditto                 IN      A     172.28.60.11
+ditto-frontend        IN      A     172.28.60.12
+frontend              IN      A     172.28.60.12
 
-cabinet_biblioteca    IN      A     172.90.0.3
-cabinet_delfino       IN      A     172.90.0.4
-cabinet_lagorio       IN      A     172.90.0.5
-cabinet_marchi        IN      A     172.90.0.6
-cabinet_locatelli     IN      A     172.90.0.7
-cabinet_seb           IN      A     172.90.0.8
+cabinet_biblioteca    IN      A     172.28.90.3
+cabinet_delfino       IN      A     172.28.90.4
+cabinet_lagorio       IN      A     172.28.90.5
+cabinet_marchi        IN      A     172.28.90.6
+cabinet_locatelli     IN      A     172.28.90.7
+cabinet_seb           IN      A     172.28.90.8
 
 cabinets.delfino      IN      CNAME cabinet_delfino
 cabinets.lagorio      IN      CNAME cabinet_lagorio

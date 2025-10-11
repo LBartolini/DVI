@@ -11,15 +11,15 @@ uci -q batch <<-EOF >/dev/null
   set network.ent2ind=interface
   set network.ent2ind.proto=static
   set network.ent2ind.ifname=eth0
-  set network.ent2ind.ipaddr='172.80.0.2'
-  set network.ent2ind.gateway='172.80.0.1'
+  set network.ent2ind.ipaddr='172.28.80.2'
+  set network.ent2ind.gateway='172.28.80.1'
   set network.ent2ind.netmask='255.255.255.0'
 
   # industrial interface
   set network.industrial=interface
   set network.industrial.proto=static
   set network.industrial.ifname=eth1
-  set network.industrial.ipaddr='172.90.0.1'
+  set network.industrial.ipaddr='172.28.90.1'
   set network.industrial.netmask='255.255.255.0'
 
   set network.loopback.ipaddr='127.0.0.1'

@@ -1,10 +1,10 @@
 services:
-###### ENTERPRISE (172.60.0.0/24)
+###### ENTERPRISE (172.28.60.0/24)
   enterprise-db:
     build: framework/db/mariadb-CVE-2012-2122
     #build: framework/db/mariadb
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -23,17 +23,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.3
+        ipv4_address: 172.28.60.3
 
   scada:
     build: framework/scada
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -58,17 +58,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.4
+        ipv4_address: 172.28.60.4
 
   camunda:
     build: framework/bpmn/camunda
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -92,18 +92,18 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.5
+        ipv4_address: 172.28.60.5
   
   camunda-deployer:
     build: framework/bpmn/deployer
     restart: on-failure
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -125,18 +125,18 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.6
+        ipv4_address: 172.28.60.6
 
   camunda-cron:
     build: framework/bpmn/cron
     restart: on-failure
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -165,17 +165,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.7
+        ipv4_address: 172.28.60.7
 
   camunda-viewer:
     build: framework/bpmn/viewer
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -195,18 +195,18 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.8
+        ipv4_address: 172.28.60.8
   
   ditto-db:
     mem_limit: 128m
     build: framework/db/mongo
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -222,12 +222,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.9
+        ipv4_address: 172.28.60.9
 
   ditto-register:
     build: framework/ditto/register
@@ -240,7 +240,7 @@ services:
     cap_add:
       - NET_ADMIN        
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -257,12 +257,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"   
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local           
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.10
+        ipv4_address: 172.28.60.10
 
   ditto:
     build: framework/ditto/binpack
@@ -273,7 +273,7 @@ services:
       ditto-db:
         condition: service_healthy         
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -292,12 +292,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local                
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.11
+        ipv4_address: 172.28.60.11
   
   ditto-frontend:
     build: framework/ditto/frontend
@@ -307,7 +307,7 @@ services:
       ditto:
         condition: service_healthy         
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -330,12 +330,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local                 
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.12
+        ipv4_address: 172.28.60.12
 
   windows:
     image: dockurr/windows # RDP -> Username: Docker, Password: admin
@@ -343,7 +343,7 @@ services:
       enterprise:
         condition: service_healthy 
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.60.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.60.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -362,19 +362,19 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.60.0.1
+          - GATEWAY=172.28.60.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local           
     stop_grace_period: 1m
     networks:
       n40_enterprise:
-        ipv4_address: 172.60.0.13
+        ipv4_address: 172.28.60.13
 
-###### INDUSTRIAL (172.90.0.0/24)
+###### INDUSTRIAL (172.28.90.0/24)
   sun-simulator:
     build: framework/scriptablesensor
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -402,17 +402,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.51
+        ipv4_address: 172.28.90.51
 
   people-simulator:
     build: framework/scriptablesensor
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -436,17 +436,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.52
+        ipv4_address: 172.28.90.52
 
   energy-store-1:
     build: framework/scriptablesensor
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -470,17 +470,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.53
+        ipv4_address: 172.28.90.53
 
   solar-panel-1:
     build: framework/scriptablesensor
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -504,17 +504,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.54
+        ipv4_address: 172.28.90.54
 
   gas-generator-1:
     build: framework/scriptablesensor
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -538,16 +538,16 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.55
+        ipv4_address: 172.28.90.55
   cabinet_biblioteca:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -568,17 +568,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.3
+        ipv4_address: 172.28.90.3
   
   plc_biblioteca:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -595,12 +595,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.13
+        ipv4_address: 172.28.90.13
 
   clients_biblioteca:
     build: framework/nothing
@@ -617,7 +617,7 @@ services:
   cabinet_delfino:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -638,17 +638,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.4
+        ipv4_address: 172.28.90.4
   
   plc_delfino:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -665,12 +665,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local        
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.14
+        ipv4_address: 172.28.90.14
 
   clients_delfino:
     build: framework/nothing
@@ -687,7 +687,7 @@ services:
   cabinet_lagorio:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -708,17 +708,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.5
+        ipv4_address: 172.28.90.5
   
   plc_lagorio:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -735,12 +735,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.15
+        ipv4_address: 172.28.90.15
 
   clients_lagorio:
     build: framework/nothing
@@ -757,7 +757,7 @@ services:
   cabinet_marchi:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -778,17 +778,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.6
+        ipv4_address: 172.28.90.6
   
   plc_marchi:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -805,12 +805,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.16
+        ipv4_address: 172.28.90.16
 
   clients_marchi:
     build: framework/nothing
@@ -827,7 +827,7 @@ services:
   cabinet_locatelli:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -848,17 +848,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.7
+        ipv4_address: 172.28.90.7
   
   plc_locatelli:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -875,12 +875,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.17
+        ipv4_address: 172.28.90.17
 
   clients_locatelli:
     build: framework/nothing
@@ -897,7 +897,7 @@ services:
   cabinet_seb:
     build: framework/cabinet
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -918,17 +918,17 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh"
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.8
+        ipv4_address: 172.28.90.8
   
   plc_seb:
     build: framework/openplc
     healthcheck:
-      test: test -e /.setup_correctly && (ping -c 5 172.90.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.setup_correctly && (ping -c 5 172.28.90.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -945,12 +945,12 @@ services:
     post_start:
        - command: /bin/sh -c "chmod +x /initial_setup.sh; /initial_setup.sh" 
          environment:
-          - GATEWAY=172.90.0.1
+          - GATEWAY=172.28.90.1
           - DNS=172.28.0.3
           - DNS_BASE_SEARCH=campus-savona.local       
     networks:
       n60_industrial:
-        ipv4_address: 172.90.0.18
+        ipv4_address: 172.28.90.18
 
   clients_seb:
     build: framework/nothing
@@ -1132,7 +1132,7 @@ services:
       n20_dmz:
         ipv4_address: 172.28.0.1
       n30_per2ent:
-        ipv4_address: 172.50.0.1
+        ipv4_address: 172.28.50.1
   
   enterprise:
     image: openwrt/rootfs:x86_64-openwrt-23.05
@@ -1142,7 +1142,7 @@ services:
     volumes:
       - ./config/router/enterprise/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
-      test: test -e /.started && (ping -c 4 172.50.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.started && (ping -c 4 172.28.50.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -1153,11 +1153,11 @@ services:
     privileged: true
     networks:
       n30_per2ent:
-        ipv4_address: 172.50.0.2
+        ipv4_address: 172.28.50.2
       n40_enterprise:
-        ipv4_address: 172.60.0.1
+        ipv4_address: 172.28.60.1
       n50_ent2ind:
-        ipv4_address: 172.80.0.1
+        ipv4_address: 172.28.80.1
 
   industrial:
     image: openwrt/rootfs:x86_64-openwrt-23.05
@@ -1167,7 +1167,7 @@ services:
     volumes:
       - ./config/router/industrial/init.sh:/etc/uci-defaults/init.sh
     healthcheck:
-      test: test -e /.started && (ping -c 4 172.80.0.1 > /dev/null 2>&1 || exit 1)
+      test: test -e /.started && (ping -c 4 172.28.80.1 > /dev/null 2>&1 || exit 1)
       interval: 5s
       timeout: 5s
       retries: 2
@@ -1178,9 +1178,9 @@ services:
     privileged: true
     networks:
       n50_ent2ind:
-        ipv4_address: 172.80.0.2
+        ipv4_address: 172.28.80.2
       n60_industrial:
-        ipv4_address: 172.90.0.1
+        ipv4_address: 172.28.90.1
 
 networks:
   n0_internet:
@@ -1213,8 +1213,8 @@ networks:
      ovs.bridge.preallocate_ports: 12
     ipam:
       config:
-        - subnet: 172.50.0.0/24
-          gateway: 172.50.0.253
+        - subnet: 172.28.50.0/24
+          gateway: 172.28.50.253
   
   n40_enterprise:
     driver: dovesnap
@@ -1226,8 +1226,8 @@ networks:
      ovs.bridge.preallocate_ports: 12
     ipam:
       config:
-        - subnet: 172.60.0.0/24
-          gateway: 172.60.0.253
+        - subnet: 172.28.60.0/24
+          gateway: 172.28.60.253
   
   n50_ent2ind:
     driver: dovesnap
@@ -1239,8 +1239,8 @@ networks:
      ovs.bridge.preallocate_ports: 12
     ipam:
       config:
-        - subnet: 172.80.0.0/24
-          gateway: 172.80.0.253
+        - subnet: 172.28.80.0/24
+          gateway: 172.28.80.253
   
   n60_industrial:
     driver: dovesnap
@@ -1252,8 +1252,8 @@ networks:
      ovs.bridge.preallocate_ports: 12
     ipam:
       config:
-        - subnet: 172.90.0.0/24
-          gateway: 172.90.0.253
+        - subnet: 172.28.90.0/24
+          gateway: 172.28.90.253
 
 volumes:
   enterprise_db:

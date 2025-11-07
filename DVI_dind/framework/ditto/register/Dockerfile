@@ -17,6 +17,6 @@ RUN mvn package
 FROM amazoncorretto:17-alpine3.22-jdk
 COPY --from=build /opt/dittoregister/target/lib /opt/lib
 COPY --from=build /opt/dittoregister/target/dittoregister-*.jar /opt/dittoregister.jar
-RUN apt-get update -qq && apt-get install -y iputils-ping iproute2
+RUN apk add iputils-ping iproute2
 WORKDIR /opt
 ENTRYPOINT [ "java","-jar", "/opt/dittoregister.jar" ]

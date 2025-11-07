@@ -16,6 +16,6 @@ RUN mvn package
 #
 FROM amazoncorretto:17-alpine3.22-jdk
 COPY --from=build /opt/scriptablesensor/target/scriptablesensor-*.jar /opt/scriptablesensor.jar
-RUN apt-get update -qq && apt-get install -y iputils-ping iproute2
+RUN apk add iputils-ping iproute2
 WORKDIR /opt
 ENTRYPOINT [ "java","--illegal-access=permit","-jar", "/opt/scriptablesensor.jar" ]

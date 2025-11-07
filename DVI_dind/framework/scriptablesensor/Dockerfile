@@ -14,7 +14,7 @@ RUN mvn package
 #
 # Run
 #
-FROM openjdk:16-slim-bullseye
+FROM amazoncorretto:17-alpine3.22-jdk
 COPY --from=build /opt/scriptablesensor/target/scriptablesensor-*.jar /opt/scriptablesensor.jar
 RUN apt-get update -qq && apt-get install -y iputils-ping iproute2
 WORKDIR /opt

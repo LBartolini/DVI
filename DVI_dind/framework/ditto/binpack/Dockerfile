@@ -14,10 +14,10 @@ RUN mvn package
 #
 # Run
 #
-FROM amazoncorretto:17-alpine3.22-jdk
+FROM eclipse-temurin:16-jdk-alpine
 #FROM ghcr.io/graalvm/graalvm-ce:21.0.0
 COPY --from=build /opt/ditto-binpack/target/lib /opt/lib
 COPY --from=build /opt/ditto-binpack/target/binpack-*.jar /opt/ditto-binpack.jar
-RUN apk add iputils-ping iproute2
+RUN apk add --no-cache iputils iproute2
 WORKDIR /opt
 ENTRYPOINT [ "java", "-jar", "/opt/ditto-binpack.jar" ]

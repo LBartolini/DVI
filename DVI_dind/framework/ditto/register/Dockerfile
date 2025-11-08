@@ -14,9 +14,9 @@ RUN mvn package
 #
 # Run
 #
-FROM amazoncorretto:17-alpine3.22-jdk
+FROM eclipse-temurin:16-jdk-alpine
 COPY --from=build /opt/dittoregister/target/lib /opt/lib
 COPY --from=build /opt/dittoregister/target/dittoregister-*.jar /opt/dittoregister.jar
-RUN apk add iputils-ping iproute2
+RUN apk add --no-cache iputils iproute2
 WORKDIR /opt
 ENTRYPOINT [ "java","-jar", "/opt/dittoregister.jar" ]

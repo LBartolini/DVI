@@ -1107,16 +1107,16 @@ services:
     entrypoint: "/sbin/init"
     ports:
       - 5000:5000 # Web (Only access point for the system, all the other are just for management and debug tasks)
-      - 5001:5001 # scada
-      - 5002:5002 # bpmn viewer
-      - 5003:5003/tcp # Windows RDP
-      - 5003:5003/udp # Windows RDP
-      - 5004:5004 # Windows VNC
-      - 5005:5005 #
-      - 5006:5006 # FTP Admin Panel (Port 5466)
-      - 8081:80 # LuCI perimeter
-      - 8082:8082 # LuCI enterprise
-      - 8083:8083 # LuCI industrial
+     # - 5001:5001 # scada
+     # - 5002:5002 # bpmn viewer
+     # - 5003:5003/tcp # Windows RDP
+     # - 5003:5003/udp # Windows RDP
+     # - 5004:5004 # Windows VNC
+     # - 5005:5005 #
+     # - 5006:5006 # FTP Admin Panel (Port 5466)
+     # - 8081:80 # LuCI perimeter
+     # - 8082:8082 # LuCI enterprise
+     # - 8083:8083 # LuCI industrial
     volumes:
       - ./config/router/perimeter/init.sh:/etc/uci-defaults/init.sh
     healthcheck:

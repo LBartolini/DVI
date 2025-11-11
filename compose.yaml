@@ -3,7 +3,7 @@ services:
     image: docker:28.2-dind
     restart: unless-stopped
     ports:
-      - 5000:5000 # Web (Only access point for the system, all the other are just for management and debug tasks)
+      - 5000:5000 # Web (Only access point for the system, all the other are just for management and debug tasks and are DISABLED by default, you can uncomment the corresponding port mappings inside the DVI_dind compose file for the perimeter router)
       - 5001:5001 # scada
       - 5002:5002 # bpmn viewer
       - 5003:5003/tcp # Windows RDP
